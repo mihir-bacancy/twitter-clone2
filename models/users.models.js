@@ -65,3 +65,17 @@ module.exports.getUser = function(query) {
     });
   })
 }
+
+module.exports.updateUser = function(query,condition,callback) {
+  return new Promise((resolve, reject) => {
+    User.update(query,condition,function(err ,data) {
+      if(err) {
+        reject(err);
+      }
+      resolve(data);
+    });
+
+  })
+}
+
+

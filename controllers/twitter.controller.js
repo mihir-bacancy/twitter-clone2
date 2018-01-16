@@ -1,5 +1,6 @@
 var User   = require('../models/users.models');
-
+let TempMail;
+let TempUser;
 exports.home =  function (req, res) {
   // let uname =  req.body.uname;
   // let pw =  req.body.pw;
@@ -67,15 +68,48 @@ exports.loginPost = async function(req, res) {
 
   let user = await User.getUser({ $and : [ { username: uname }, { password : pw} ] });
 
-
-
   if(user){
     console.log("login succesfull");
     res.render('home');
   }else{
     console.log("username or pw incorrectt");
     res.redirect('/login');
-
   }
+}
 
+
+exports.finduserGet = function(req, res) {
+  res.render('finduser');
+}
+
+exports.finduserPost = async function(req, res) {
+
+  TempUser = req.body.uname;
+  TempMail = req.body.email;
+  let user = await User.getUser({ $and : [ { username: TempUser }, { email : TempMail} ] });
+  //  let user = await User.updateUser( { email : mail } , { $set : { password : pw } });
+  console.log(user);
+  if(user){
+    res.render("resetpw");
+  }else{
+    res.render("finduser");
+    //res.send(alert("Usernot found"))
+  }
+}
+
+exports.resetpwGet = function(req, res) {
+  res.render('resetpw');
+}
+
+exports.resetpwPost = async function(req, res) {
+
+  let pw = req.body.pw;
+  let confirmpw = req.body.confirmpw;
+  if(pw == confirmpw){
+    let user = await User.updateUser( { email : TempMail } , { $set : { password : confirmpw } });
+    console.log(user);
+    res.redirect("./login");
+  }else{
+    res.send("plz enter same pw on both textfield");
+  }
 }
