@@ -1,6 +1,7 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 const express = require('express');
+const crypto = require('crypto');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -8,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 const routes = require('./routes');
 

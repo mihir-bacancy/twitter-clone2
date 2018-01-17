@@ -12,5 +12,7 @@ router.get('/finduser', twitterController.finduserGet);
 router.post('/finduser', twitterController.finduserPost);
 router.get('/resetpw', twitterController.resetpwGet);
 router.post('/resetpw', twitterController.resetpwPost);
+//router.post('/jwtauthenticate', twitterController.jwtauthenticatePost);
+router.post('/home', homeontroller.homePost);
 module.exports = router;
 

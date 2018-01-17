@@ -1,4 +1,8 @@
-var User   = require('../models/users.models');
+const User   = require('../models/users.models');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+var cookie = require('cookie');
+//process.env.SECRET_KEY="mihir123";
 let TempMail;
 let TempUser;
 exports.home =  function (req, res) {
@@ -66,15 +70,26 @@ exports.loginPost = async function(req, res) {
   let pw =  req.body.pw;
 
 
-  let user = await User.getUser({ $and : [ { username: uname }, { password : pw} ] });
+  let user = await User.getUser( { username: uname }  );
 
-  if(user){
-    console.log("login succesfull");
-    res.render('home');
-  }else{
+  console.log(">>>>>",user.password);
+
+  if(bcrypt.compareSync(pw, user.password)) {
+    console.log(">>>>>login succesfull");
+    console.log(user);
+    let token = jwt.sign({ username : user.username , email : user.email }, 'SECRETKEY',{ expiresIn:5000  });
+    //res.json({success: true, token: 'JWT ' + token});
+    res.cookie('token',token ).render('home');
+    console.log("Cookies :  ", req.cookies.token);
+    //res.json( { status:true, token:token } ).render('home')
+    console.log(token);
+    //res.render('home');
+  } else {
     console.log("username or pw incorrectt");
+    //res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
     res.redirect('/login');
   }
+
 }
 
 
@@ -112,4 +127,8 @@ exports.resetpwPost = async function(req, res) {
   }else{
     res.send("plz enter same pw on both textfield");
   }
+}
+
+exports.jsonwebtoken = function(req,res){
+
 }

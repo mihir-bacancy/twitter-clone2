@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 
 var UserSchema = mongoose.Schema({
   name: {
@@ -44,15 +45,20 @@ var UserSchema = mongoose.Schema({
 var User = module.exports = mongoose.model('users', UserSchema);
 
 module.exports.createUser = function(newUser, callback) {
-  newUser.save(callback);
-  console.log("User"+newUser);
+  bcrypt.genSalt(10, function(err, salt) {
+    return bcrypt.hash(newUser.password, salt, function(err, hash) {
+      newUser.password = hash;
+      newUser.save(callback);
+      console.log("User"+newUser);
+    });
+});
+
 }
 /*
 module.exports.getUser = function(query, callback) {
   User.findOne(query, callback);
 }
 */
-
 
 module.exports.getUser = function(query) {
   console.log(query);
@@ -67,6 +73,7 @@ module.exports.getUser = function(query) {
 }
 
 module.exports.updateUser = function(query,condition,callback) {
+  console.log(">>>>");
   return new Promise((resolve, reject) => {
     User.update(query,condition,function(err ,data) {
       if(err) {
@@ -77,5 +84,3 @@ module.exports.updateUser = function(query,condition,callback) {
 
   })
 }
-
-
