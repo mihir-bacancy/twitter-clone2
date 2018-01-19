@@ -2,31 +2,19 @@ const User   = require('../models/users.models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var cookie = require('cookie');
+var session = require('express-session');
 //process.env.SECRET_KEY="mihir123";
 let TempMail;
 let TempUser;
-exports.home =  function (req, res) {
-  // let uname =  req.body.uname;
-  // let pw =  req.body.pw;
-
-
-  // let user = await User.getUser({username: uname,password: pw});
-
-  // console.log(user);
-  // if(user){
-  //   //res.redirect('/home');
-  //   //res.redirect('home');
-  //   console.log("user login succesful");
-  // } else{
-  //  // res.render('index',{ title : user});
-  //   console.log("user not found");
-  //       //res(new Error("User not found"));
-  // }
-
-}
 
 exports.registerGet = function(req, res) {
-  res.render('register');
+  if(req.session.sessToken !== undefined) {
+    res.redirect('./home');
+  }
+  else{
+    res.render('register');
+  }
+
 }
 
 exports.registerPost = async function(req, res) {
@@ -62,28 +50,29 @@ exports.registerPost = async function(req, res) {
 
 
 exports.loginGet = function(req, res) {
-  res.render('login');
+  if(req.session.sessToken !== undefined) {
+    res.redirect('/home');
+  }else{
+    res.render('login');
+  }
+
 }
 
 exports.loginPost = async function(req, res) {
   let uname =  req.body.uname;
   let pw =  req.body.pw;
-
-
+  let sess = req.session;
+  console.log(sess);
   let user = await User.getUser( { username: uname }  );
 
-  console.log(">>>>>",user.password);
-
   if(bcrypt.compareSync(pw, user.password)) {
-    console.log(">>>>>login succesfull");
-    console.log(user);
-    let token = jwt.sign({ username : user.username , email : user.email }, 'SECRETKEY',{ expiresIn:5000  });
-    //res.json({success: true, token: 'JWT ' + token});
-    res.cookie('token',token ).render('home');
-    console.log("Cookies :  ", req.cookies.token);
-    //res.json( { status:true, token:token } ).render('home')
-    console.log(token);
-    //res.render('home');
+
+    let token = jwt.sign({ username : user.username , email : user.email }, 'SECRETKEY',{ expiresIn : 5000  });
+    sess.sessToken = token;
+    sess.uname = uname;
+    console.log(">>>",sess.sessToken)
+    res.cookie('token',token ).redirect('/home');
+
   } else {
     console.log("username or pw incorrectt");
     //res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
@@ -129,6 +118,8 @@ exports.resetpwPost = async function(req, res) {
   }
 }
 
-exports.jsonwebtoken = function(req,res){
-
-}
+exports.logout = function(req, res) {
+  console.log("session destroy>>>>>");
+  req.session.destroy();
+  res.redirect('/login');
+};

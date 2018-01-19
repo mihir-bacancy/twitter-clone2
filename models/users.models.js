@@ -20,6 +20,9 @@ var UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  img: {
+    data: Buffer, contentType: String
+  },
   createdAt: {
     type:Date,
     default:function() {
@@ -83,4 +86,20 @@ module.exports.updateUser = function(query,condition,callback) {
     });
 
   })
+}
+
+module.exports.updateProfile = function(query, name, img, pw, email){
+  return new Promise((resolve, reject) => {
+
+    User.update(query, { $set : {name : name, img : img, email : email}}, function(err ,data) {
+      if(err) {
+        reject(err);
+
+      }
+      else{
+         console.log("data inserted")
+      }
+        resolve(data);
+    });
+  });
 }

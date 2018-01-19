@@ -10,6 +10,9 @@ const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const session = require('express-session');
+const multer = require('multer');
+
 
 const routes = require('./routes');
 
@@ -26,10 +29,11 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('Shh, its a secret!'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({secret: "Shh, its a secret!" ,  cookie: { maxAge: 60000 }}));
 console.log("console running...");
-app.use('/', routes);
+app.use('/', routes)  ;
 
 // ========================== Database Connection ==============================
 const mongoURL = mongoDb.makeConnectionString();
