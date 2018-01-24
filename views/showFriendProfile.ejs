@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/stylesheet/style.css">
+    </head>
+
+  <body>
+    <% include headerAfterLogin %>
+
+    <div class="container">
+      <h1></h1>
+      <hr>
+      <div class="row">
+      <!-- left column -->
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="well well-sm">
+              <div class="row">
+                <div class="col-sm-6 col-md-4">
+                  <img src="4.jpg" alt="" class="img-rounded img-responsive" />
+                </div>
+                <div class="col-sm-6 col-md-8">
+                <h4><%= checkUser.name %></h4>
+                  <input type="hidden" value="<%= username %>" id="username" name="username">
+                      <%= checkUser.username%>
+                  <input type="hidden" value="<%= checkUser.username %>" id="friendUsername" name="friendUsername">
+                   <p>  Username :<%=checkUser.username%></p>
+                   <p>  Username :<%= status%></p>
+                    <br />
+
+                      <%if(status == "follow") { %>
+                        <button class="btn btn-primary" id="unfollow"><%= status %></button>
+                      <% } else { %>
+                        <button class="btn btn-primary" id="follow" ><%= status %></button>
+                      <% } %>
+                </div>
+              </div>
+        </div>
+        </div>
+        </div>
+      <!-- edit form column -->
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+    $("#follow").click(function(){
+        alert("follow called");
+        let myUsername = document.getElementById('username').value;
+        console.log("myUsername",myUsername);
+        let friendUsername = document.getElementById('friendUsername').value;
+          $.ajax({
+                method: "POST",
+                url: "/follow",
+                data: {myUsername : myUsername,friendUsername : friendUsername}
+              })
+              .done(function( msg ) {
+                location.reload()
+              });
+      });
+    </script>
+    <script type="text/javascript">
+      $("#unfollow").click(function(){
+        alert("unfollow called");
+      let myUsername = document.getElementById('username').value;
+      let friendUsername = document.getElementById('friendUsername').value;
+        $.ajax({
+              method: "POST",
+              url: "/unfollow",
+              data: {myUsername : myUsername,friendUsername : friendUsername}
+            })
+            .done(function( msg ) {
+              location.reload()
+            });
+    });
+    </script>
+  </body>
+</html>
+

@@ -1,4 +1,5 @@
 const User   = require('../models/users.models');
+const Follow   = require('../models/users.models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var cookie = require('cookie');
@@ -23,15 +24,21 @@ exports.registerPost = async function(req, res) {
   let email =  req.body.email;
   let pw =  req.body.pw;
 
+  console.log(">>>",username);
+  console.log(">>>",name);
+  console.log(">>>",email);
+  console.log(">>>",pw);
+
   let newUser = new User({
-    name : name,
-    username: username,
-    email:email,
-    password: pw
+    name: username,
+    username: name,
+    email: email,
+    password: pw,
   });
 
-  let checkUser =await User.getUser({ $or : [ { username: username }, { email : email} ] });
-  console.log(">>>>>>>",checkUser)
+
+  let checkUser = await User.getUser({ $or : [ { username: username }, { email : email} ] });
+
   if(checkUser) {
     console.log("try different username and email");
     res.render('register');
@@ -41,7 +48,7 @@ exports.registerPost = async function(req, res) {
         console.log(err)
       }
       if(userInfo){
-        console.log("User added  ---->",userInfo);
+
         res.render('login');
       }
     })
@@ -64,13 +71,15 @@ exports.loginPost = async function(req, res) {
   let sess = req.session;
   console.log(sess);
   let user = await User.getUser( { username: uname }  );
-
+  // console.log(">>>>>>",user);
   if(bcrypt.compareSync(pw, user.password)) {
 
     let token = jwt.sign({ username : user.username , email : user.email }, 'SECRETKEY',{ expiresIn : 5000  });
     sess.sessToken = token;
     sess.uname = uname;
-    console.log(">>>",sess.sessToken)
+    sess._id = user._id;
+
+   // console.log(">>>",sess.sessToken)
     res.cookie('token',token ).redirect('/home');
 
   } else {
@@ -123,3 +132,7 @@ exports.logout = function(req, res) {
   req.session.destroy();
   res.redirect('/login');
 };
+
+
+
+

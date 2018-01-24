@@ -20,9 +20,9 @@ var UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  img: {
-    data: Buffer, contentType: String
-  },
+   img: {
+     data: Buffer, contentType: String, required: false,
+   },
   createdAt: {
     type:Date,
     default:function() {
@@ -47,7 +47,8 @@ var UserSchema = mongoose.Schema({
 
 var User = module.exports = mongoose.model('users', UserSchema);
 
-module.exports.createUser = function(newUser, callback) {
+module.exports. createUser = function(newUser, callback) {
+  console.log("newUser.>>>>>.",newUser)
   bcrypt.genSalt(10, function(err, salt) {
     return bcrypt.hash(newUser.password, salt, function(err, hash) {
       newUser.password = hash;
@@ -55,7 +56,6 @@ module.exports.createUser = function(newUser, callback) {
       console.log("User"+newUser);
     });
 });
-
 }
 /*
 module.exports.getUser = function(query, callback) {
@@ -103,3 +103,30 @@ module.exports.updateProfile = function(query, name, img, pw, email){
     });
   });
 }
+
+module.exports.searchUser = function(query) {
+  console.log(query);
+  return new Promise((resolve, reject) => {
+    User.find(query, function(err ,data) {
+      if(err) {
+        reject(err);
+      }
+      resolve(data);
+    });
+  })
+}
+
+module.exports.follow = function(newUser, callback) {
+
+  newUser.save(function (err) {
+  if (err) return handleError(err);
+
+  follwer.save(function (err) {
+    if (err) return handleError(err);
+    // thats it!
+  });
+});
+     // newUser.save(callback);
+
+}
+

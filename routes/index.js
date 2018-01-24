@@ -14,6 +14,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 const twitterController = require('../controllers/twitter.controller.js')
 const homeController = require('../controllers/home.controller.js')
+const searchFriendController = require('../controllers/SearchFriend.controller.js')
 
 //router.get('/', testController.test);
 router.get('/login', twitterController.loginGet);
@@ -29,12 +30,39 @@ router.get('/logout', twitterController.logout);
 router.get('/home',isAuthenticated ,homeController.homeGet);
 router.get('/profile',isAuthenticated,homeController.profileGet);
 router.post('/profile',upload.any(),homeController.profilePost);
+router.get('/showProfile',isAuthenticated,homeController.showProfileGet);
+
+
+router.get('/searchFriend',searchFriendController.searchFriendGet);
+router.post('/searchFriend',searchFriendController.searchFriendPost);
+router.get('/showFriendProfile',searchFriendController.showFriendProfileGet);
+router.post('/follow',searchFriendController.followPost);
+router.post('/unfollow',searchFriendController.unfollowPost);
+
+
+
+//router.get('/showFriendResult',homeController.showFriendResultPost);
+//router.get('/showFriendProfile',isAuthenticated,homeController.showFriendProfilePost);
+
 module.exports = router;
+
+// router.get('/showFriendResult',homeController.showFriendResultGet);
+// router.post('/showFriendResult',homeController.showFriendResultPost);
+
+
+
+
+
+// router.post('/testAjax', function(req, res) {
+//   console.log(".......", req.body);
+//   res.send("its working");
+// })
 
 
 function isAuthenticated(req, res, next) {
   if (req.session.sessToken || req.session.uname){
-    console.log("authentication")
+
+    console.log("<<<<<   authentication  >>>>>")
     return next();
 
   }else{

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+
+  </head>
+
+    <body>
+      <% include headerAfterLogin %>
+  <h1>Welcome  to friend result<h1>
+  <div class="dropdown">
+
+
+
+  </div>
+    <div id="results">
+
+     </div>
+  <ul>
+
+
+  </ul>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+    $("#search").keyup(function(){
+      let query = document.getElementById('search').value;
+    console.log("search",query);
+      console.log("SearchFriend.ejs  jquery >>>>>");
+       $.ajax({
+
+          method: "POST",
+          url: "/searchFriend",
+          data: {search : query}
+        })
+        .done(function( msg ) {
+          console.log(">>>>", msg);
+
+              for (var i=0; i<msg.length; i++) {
+                  console.log(msg[i]["username"]);
+
+                  $("#results").append('<p><a href="/showFriendProfile?id='+msg[i]["username"]+'">'+msg[i]["username"]+'</a></p>');
+
+              }
+
+
+        });
+    })
+    </script>
+
+    </body>
+</html>
+
