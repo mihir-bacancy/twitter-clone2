@@ -41,23 +41,7 @@ router.post('/unfollow',searchFriendController.unfollowPost);
 
 
 
-//router.get('/showFriendResult',homeController.showFriendResultPost);
-//router.get('/showFriendProfile',isAuthenticated,homeController.showFriendProfilePost);
-
 module.exports = router;
-
-// router.get('/showFriendResult',homeController.showFriendResultGet);
-// router.post('/showFriendResult',homeController.showFriendResultPost);
-
-
-
-
-
-// router.post('/testAjax', function(req, res) {
-//   console.log(".......", req.body);
-//   res.send("its working");
-// })
-
 
 function isAuthenticated(req, res, next) {
   if (req.session.sessToken || req.session.uname){

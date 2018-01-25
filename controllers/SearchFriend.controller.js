@@ -15,30 +15,55 @@ exports.searchFriendPost = async function(req,res){
   }else{
     res.send("no user found");
   }
-
 }
 
 exports.showFriendProfileGet = async function(req,res){
-  let username = req.query.id;
-  let status;
-   if(username != null) {
-    username = username.replace("\'","");
-    username = username.replace("\'","");
+  let friendUsername = req.query.id;
+  let status= "follow";
+   if(friendUsername != null) {
+    friendUsername = friendUsername.replace("\'","");
+    friendUsername = friendUsername.replace("\'","");
    }
 
-   let checkFollowStatus = await Follower.checkFollow( { $and : [ { username : req.session.uname },{ following : username }]})
-    console.log("checkFollow:", checkFollowStatus);
-    if(checkFollowStatus){
+   let checkFollowStatus = await Follower.checkFollow(
+    {
+      $and :
+      [
+        {
+          username : req.session.uname
+        },
+        {
+          following : friendUsername
+        }
+      ]
+    })
 
+    if(checkFollowStatus){
       if(checkFollowStatus.status === false){
         status = "follow";
       }else{
         status = "unfollow"
       }
+    } else {
+      let newFollower = new Follower({
+        username: req.session.uname,
+        following: friendUsername,
+        status: true,
+      });
+
+      let followInsert = await Follower.follow(newFollower,function(err,userInfo){
+        if (err) {
+          console.log(err);
+        }
+        if(userInfo){
+          status = "follow";
+
+        }
+      });
     }
 
-  console.log("Status>>>>>>>>>>>>>>>>",status);
-  let checkUser = await User.getUser( { username  : username } );
+
+  let checkUser = await User.getUser( { username  : friendUsername } );
   res.render('showFriendProfile', {
     checkUser : checkUser,username : req.session.uname,
     status : status
@@ -50,10 +75,7 @@ exports.showFriendProfileGet = async function(req,res){
 exports.followPost =async function(req, res) {
   let myUsername =  req.body.myUsername;
   let friendUsername =  req.body.friendUsername;
-  console.log("myUsername",myUsername)
-  console.log("friendUsername",friendUsername)
 
-  console.log("============FollowingUser==============",req.body);
 
   let newFollower = new Follower({
     username: req.session.uname,
@@ -85,10 +107,8 @@ exports.unfollowPost =async function(req, res) {
   let myUsername =  req.body.myUsername;
   let friendUsername =  req.body.friendUsername;
 
-  console.log("?????", myUsername,
-  friendUsername)
 
-  console.log("===========unfollowPost==============",req.body);
+
 
   let unfollowFriend = await Follower.updateFollow({$and:[{username:myUsername},
                             {following:friendUsername}]},{$set:{status:true}});

@@ -4,11 +4,11 @@ var bcrypt = require('bcrypt');
 var FollowSchema = mongoose.Schema({
   username: {
     type: String,
-    unique: true,
+    required: true,
   },
   following: {
     type: String,
-    unique: true
+    required: true,
   },
   status: {
     type: Boolean,
@@ -26,22 +26,16 @@ var FollowSchema = mongoose.Schema({
 var Follow = module.exports = mongoose.model('follow', FollowSchema);
 
 module.exports.follow = function(newFollow, callback) {
-  console.log("newUser.>>>>>.",newFollow)
-
-      newFollow.save(callback);
-
-      console.log("User.......=.=..=.=.=........"+newFollow);
+    newFollow.save(callback);
   }
 
 
 module.exports.checkFollow = function(query) {
-  console.log("checkFollow",query);
   return new Promise((resolve, reject) => {
     Follow.findOne(query, function(err ,data) {
       if(err) {
         reject(err);
       }
-      console.log(data);
       resolve(data);
     });
   })

@@ -47,13 +47,13 @@ var UserSchema = mongoose.Schema({
 
 var User = module.exports = mongoose.model('users', UserSchema);
 
-module.exports. createUser = function(newUser, callback) {
-  console.log("newUser.>>>>>.",newUser)
+module.exports.createUser = function(newUser, callback) {
+
   bcrypt.genSalt(10, function(err, salt) {
     return bcrypt.hash(newUser.password, salt, function(err, hash) {
       newUser.password = hash;
       newUser.save(callback);
-      console.log("User"+newUser);
+
     });
 });
 }
@@ -64,7 +64,7 @@ module.exports.getUser = function(query, callback) {
 */
 
 module.exports.getUser = function(query) {
-  console.log(query);
+
   return new Promise((resolve, reject) => {
     User.findOne(query, function(err ,data) {
       if(err) {
@@ -76,7 +76,7 @@ module.exports.getUser = function(query) {
 }
 
 module.exports.updateUser = function(query,condition,callback) {
-  console.log(">>>>");
+
   return new Promise((resolve, reject) => {
     User.update(query,condition,function(err ,data) {
       if(err) {
@@ -91,15 +91,18 @@ module.exports.updateUser = function(query,condition,callback) {
 module.exports.updateProfile = function(query, name, img, pw, email){
   return new Promise((resolve, reject) => {
 
-    User.update(query, { $set : {name : name, img : img, email : email}}, function(err ,data) {
+    User.update(query, {
+     $set :
+     {  name : name,
+        img : img,
+        email : email
+      }
+    }, function(err ,data) {
       if(err) {
         reject(err);
 
       }
-      else{
-         console.log("data inserted")
-      }
-        resolve(data);
+            resolve(data);
     });
   });
 }
@@ -111,6 +114,7 @@ module.exports.searchUser = function(query) {
       if(err) {
         reject(err);
       }
+
       resolve(data);
     });
   })
