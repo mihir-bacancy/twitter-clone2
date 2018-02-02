@@ -21,7 +21,7 @@ var UserSchema = mongoose.Schema({
     required: true,
   },
    img: {
-     data: Buffer, contentType: String, required: false,
+     type: String,
    },
   createdAt: {
     type:Date,
@@ -48,26 +48,18 @@ var UserSchema = mongoose.Schema({
 var User = module.exports = mongoose.model('users', UserSchema);
 
 module.exports.createUser = function(newUser, callback) {
-
   bcrypt.genSalt(10, function(err, salt) {
     return bcrypt.hash(newUser.password, salt, function(err, hash) {
       newUser.password = hash;
       newUser.save(callback);
-
     });
-});
+  });
 }
-/*
-module.exports.getUser = function(query, callback) {
-  User.findOne(query, callback);
-}
-*/
 
 module.exports.getUser = function(query) {
-
   return new Promise((resolve, reject) => {
     User.findOne(query, function(err ,data) {
-      if(err) {
+      if (err) {
         reject(err);
       }
       resolve(data);
@@ -76,10 +68,9 @@ module.exports.getUser = function(query) {
 }
 
 module.exports.updateUser = function(query,condition,callback) {
-
   return new Promise((resolve, reject) => {
     User.update(query,condition,function(err ,data) {
-      if(err) {
+      if (err) {
         reject(err);
       }
       resolve(data);
@@ -88,7 +79,7 @@ module.exports.updateUser = function(query,condition,callback) {
   })
 }
 
-module.exports.updateProfile = function(query, name, img, pw, email){
+module.exports.updateProfile = function(query, name, img, pw, email) {
   return new Promise((resolve, reject) => {
 
     User.update(query, {
@@ -98,11 +89,10 @@ module.exports.updateProfile = function(query, name, img, pw, email){
         email : email
       }
     }, function(err ,data) {
-      if(err) {
+      if (err) {
         reject(err);
-
       }
-            resolve(data);
+      resolve(data);
     });
   });
 }
@@ -111,10 +101,9 @@ module.exports.searchUser = function(query) {
   console.log(query);
   return new Promise((resolve, reject) => {
     User.find(query, function(err ,data) {
-      if(err) {
+      if (err) {
         reject(err);
       }
-
       resolve(data);
     });
   })
@@ -123,14 +112,12 @@ module.exports.searchUser = function(query) {
 module.exports.follow = function(newUser, callback) {
 
   newUser.save(function (err) {
-  if (err) return handleError(err);
-
+    if (err) return handleError(err);
   follwer.save(function (err) {
     if (err) return handleError(err);
-    // thats it!
   });
 });
-     // newUser.save(callback);
+
 
 }
 

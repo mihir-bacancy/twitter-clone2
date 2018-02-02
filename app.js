@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('Shh, its a secret!'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret: "Shh, its a secret!" ,  cookie: { maxAge: 60000 }}));
+app.use(session({secret: "Shh, its a secret!" ,  cookie: { maxAge: 600000000 }}));
 console.log("console running...");
 app.use('/', routes)  ;
 

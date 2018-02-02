@@ -33,7 +33,7 @@ module.exports.follow = function(newFollow, callback) {
 module.exports.checkFollow = function(query) {
   return new Promise((resolve, reject) => {
     Follow.findOne(query, function(err ,data) {
-      if(err) {
+      if (err) {
         reject(err);
       }
       resolve(data);
@@ -46,7 +46,7 @@ module.exports.updateFollow = function(query,condition) {
 
   return new Promise((resolve, reject) => {
     Follow.update(query,condition,function(err ,data) {
-      if(err) {
+      if (err) {
         reject(err);
       }
       resolve(data);
@@ -55,11 +55,11 @@ module.exports.updateFollow = function(query,condition) {
   })
 }
 
-module.exports.getFollowers = function(user, callback) {
+module.exports.getFollowersCount = function(user) {
   // console.log(user);
   return new Promise((resolve, reject) => {
   Follow.count(user, function(err ,data) {
-    if(err) {
+    if (err) {
       reject(err);
     }
     resolve(data);
@@ -67,3 +67,17 @@ module.exports.getFollowers = function(user, callback) {
   })
 }
 
+
+
+
+module.exports.getFollowingList = function(user) {
+  // console.log(user);
+  return new Promise((resolve, reject) => {
+  Follow.find(user, function(err ,data) {
+    if (err) {
+      reject(err);
+    }
+    resolve(data);
+  });
+  })
+}

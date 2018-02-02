@@ -1,36 +1,35 @@
 const User   = require('../models/users.models');
 const Follow   = require('../models/users.models');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var cookie = require('cookie');
 var session = require('express-session');
-//process.env.SECRET_KEY="mihir123";
+
 let TempMail;
 let TempUser;
 
-exports.registerGet = function(req, res) {
-  if(req.session.sessToken !== undefined) {
+exports.registerGet = function (req, res) {
+  if (req.session.sessToken !== undefined) {
     res.redirect('./home');
   }
   else{
     res.render('register');
   }
-
 }
 
-exports.registerPost = async function(req, res) {
+exports.registerPost = async function (req,res) {
   let username =  req.body.uname;
   let name =  req.body.name;
   let email =  req.body.email;
   let pw =  req.body.pw;
 
   let newUser = new User({
-    name: username,
-    username: name,
+    name: name,
+    username: username,
     email: email,
     password: pw,
   });
-
 
   let checkUser = await User.getUser(
     {
@@ -45,24 +44,26 @@ exports.registerPost = async function(req, res) {
       ]
     });
 
-  if(checkUser) {
+  if (checkUser) {
     res.render('register');
   } else {
-    let user = User.createUser(newUser,function(err,userInfo){
+    let user = User.createUser(newUser,function(err,userInfo) {
+
       if (err) {
         console.log(err)
       }
-      if(userInfo){
 
+      if (userInfo) {
         res.render('login');
       }
+
     })
   }
 }
 
 
 exports.loginGet = function(req, res) {
-  if(req.session.sessToken !== undefined) {
+  if (req.session.sessToken !== undefined) {
     res.redirect('/home');
   }else{
     res.render('login');
@@ -71,6 +72,7 @@ exports.loginGet = function(req, res) {
 }
 
 exports.loginPost = async function(req, res) {
+
   let uname =  req.body.uname;
   let pw =  req.body.pw;
   let sess = req.session;
@@ -80,7 +82,7 @@ exports.loginPost = async function(req, res) {
       username: uname
     });
 
-  if(bcrypt.compareSync(pw, user.password)) {
+  if (bcrypt.compareSync(pw, user.password)) {
 
     let token = jwt.sign(
       {
@@ -88,23 +90,20 @@ exports.loginPost = async function(req, res) {
         email : user.email
       },
       'SECRETKEY',{
-        expiresIn : 5000
+        expiresIn : 60000
       });
     sess.sessToken = token;
     sess.uname = uname;
     sess._id = user._id;
 
-   // console.log(">>>",sess.sessToken)
+   console.log(">>>",sess.sessToken)
     res.cookie('token',token ).redirect('/home');
 
   } else {
     console.log("username or pw incorrectt");
-    //res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
     res.redirect('/login');
   }
-
 }
-
 
 exports.finduserGet = function(req, res) {
   res.render('finduser');
@@ -128,7 +127,7 @@ exports.finduserPost = async function(req, res) {
     });
 
   console.log(user);
-  if(user){
+  if (user) {
     res.render("resetpw");
   }else{
     res.render("finduser");
@@ -144,7 +143,7 @@ exports.resetpwPost = async function(req, res) {
 
   let pw = req.body.pw;
   let confirmpw = req.body.confirmpw;
-  if(pw == confirmpw){
+  if (pw == confirmpw) {
     let user = await User.updateUser(
       {
         email : TempMail

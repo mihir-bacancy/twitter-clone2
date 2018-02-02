@@ -1,83 +1,141 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/stylesheet/style.css">
+	<head>
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/stylesheets/style.css">
+		<% include headerAfterLogin %>
+	</head>
 
-</head>
+	<body>
+		<div class="container">
+			<div class="row" style="    background-color: #fff;">
+				<a class="twPc-bg twPc-block" style="    height: 200px;"></a>
+				<div>
 
-  <body>
-    <% include headerAfterLogin %>
+					<div class="twPc-button">
+						<a href="https://twitter.com/sathwara_mihir" class="twitter-follow-button"
+						 data-show-count="false" data-size="large" data-show-screen-name="false"
+						  data-dnt="true">Follow @mertskaplan</a>
+					</div>
 
-<h1><%=checkUser.name%><h1>
-<div class="container">
-    <h1>Edit Profile</h1>
-    <hr>
-    <div class="row">
-      <!-- left column -->
+					<a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
+							class="twPc-avatarLink">
+						<img alt="Mert Salih Kaplan" src="<%= checkUser.img %>"
+						class="twPc-avatarImg" style="height: 150px;width: 150px">
+					</a>
 
-      <!-- edit form column -->
-      <div class="col-md-12 personal-info">
+					<form method="GET" action="/editprofile" enctype="multipart/form-data">
+						<div class="twPc-divUser">
+							<div class="twPc-divName">
+								<a href="https://twitter.com/sathwara_mihir""><%= checkUser.name %></a>
+								<input type="submit" class="btn btn-primary btn-lg pull-right" id="editProfile"  value="Edit Profile"/>
+							</div>
+							<span>
+							<a href="https://twitter.com/mertskaplan">@<span><%= checkUser.username %></span></a>
+							</span>
+						</div>
+					</form>
+
+					<div class="twPc-divStats">
+						<ul class="twPc-Arrange">
+
+							<li class="twPc-ArrangeSizeFit">
+								<button id="tweet" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Tweet</span>
+									<span class="twPc-StatValue">Tweet <%= %></span>
+								</button>
+							</li>
+
+							<li class="twPc-ArrangeSizeFit">
+								<button id="followingcount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Following</span>
+									<span class="twPc-StatValue"><%= followingcount%></span>
+								</button>
+							</li>
+
+							<li class="twPc-ArrangeSizeFit">
+								<button id="followercount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">
+									<span class="twPc-StatLabel twPc-block">Followers</span>
+									<span class="twPc-StatValue"><%= followercount%></span>
+								</a>
+							</li>
+
+						</ul>
+					</div>
+				</div>
+	</div>
+
+	<div class="row" style="padding-top : 7px;">
+		<div class="col-md-3">
+			<h5><b> Username : </b><%= checkUser.username %></h5>
+		</div>
+		<div class="col-md-6 well" id="followingA" style="word-break:break-all;background-color: #fff;list-style-type: none;">
+		</div>
+		<div class="col-md-3 well"></div>
+	</div>
 
 
-
-        <form class="form-horizontal" role="form" method="GET" action="/profile" enctype="multipart/form-data" id='infoForm'>
-          <div class="form-group">
-            <div class="row">
-              <div class="col-md-3">
-
-                <img src="4.jpg" class="img-rounded" alt="Cinque Terre" width="304" height="236">
-              </div>
-
-
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-3 control-label">UserName:</label>
-                    <div class="col-lg-8">
-                      <%= checkUser.username %>
-                    </div>
-                </div>
-
-              <div class="form-group">
-                <label class="col-lg-3 control-label">Email:</label>
-                <div class="col-lg-8">
-                  <%= checkUser.email %>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-lg-3 control-label">Follower:</label>
-                <div class="col-lg-8">
-                  <%= followercount %>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-lg-3 control-label">Following:</label>
-                <div class="col-lg-8">
-                  <%= followingcount%>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label"></label>
-                <div class="col-md-8">
-                  <input type="submit" class="btn btn-primary" value="Edit profile"/>
-
-                </div>
-              </div>
 </div>
-</div>
-        </form>
 
-      </div>
-  </div>
-</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+	 $("#followingcount").click(function() {
+		$( "#followingA" ).empty();
+			// $("following?").show();
+			$.ajax({
+				method: "POST",
+				url: "/following",
+			})
+			.done(function( data ) {
+				console.log("===",data)
+				for(let i = data.length-1 ; i>=0 ; i--) {
+					console.log("m"+data[i].following);
+					$("#followingA")
+					.prepend('<li class="well"><a href="/showFriendProfile?id='
+						+data[i].following+'">'+data[i].following+'</a></li>');
+				}
+			});
+	 });
+</script>
+<script type="text/javascript">
+	 $("#followercount").click(function() {
+		$( "#followingA" ).empty();
+		// $( "#following" ).load( "p.ejs" );
+			$.ajax({
+				method: "POST",
+				url: "/follower",
+			})
+			.done(function( data ) {
+				console.log("===",data)
+				for(let i = data.length-1 ; i>=0 ; i--) {
+					console.log("m"+data[i].following);
+					$("#followingA")
+					.prepend('<li class="well"><a href="/showFriendProfile?id='
+						+data[i].following+'">'+data[i].username+'</a></li>');
+				}
+			});
+	 });
+</script>
+<script type="text/javascript">
+	 $("#tweet").click(function() {
+		$( "#followingA" ).empty();
+		// $( "#following" ).load( "p.ejs" );
+			$.ajax({
+				method: "POST",
+				url: "/getTweet",
+			})
+			.done(function( data ) {
+				console.log("===",data)
+				for(let i = data.length-1 ; i>=0 ; i--) {
+					// console.log("m"+data[i].following);
+					$("#followingA")
+					.prepend('<li class="well"><img src="<%=  checkUser.img %>" class="img-circle" style="word-break:break-all;" width="48" height="48" /><b><%=  checkUser.username %> </b><br/>'+data[i].tweet+'</li>');
+				}
+			});
+	 });
+</script>
 
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-  </body>
+</body>
 </html>
 

@@ -3,16 +3,127 @@
   <head>
     <link rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/stylesheet/style.css">
-
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <% include headerAfterLogin %>
   </head>
 
-  <body>
-      <% include headerAfterLogin %>
-    <h1>Welcome  to home page<h1>
+  <body style="background-color: #e6ecf0">
+    <div class="container container-fluid" style="background-color: #e6ecf0">
+      <div class="row" >
+        <div class="col-md-3  col-sm-12">
+          <div class="twPc-div">
+            <a class="twPc-bg twPc-block"></a>
+          <div>
+          <div class="twPc-button">
+            <a href="" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= getUserProfileCard.username %></a>
+          </div>
+          <a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
+              class="twPc-avatarLink">
+            <img alt="Mert Salih Kaplan" src="<%= getUserProfileCard.img %>" class="twPc-avatarImg">
+          </a>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </body>
+          <div class="twPc-divUser">
+            <div class="twPc-divName">
+              <a href="https://twitter.com/sathwara_mihir"><%= getUserProfileCard.name %></a>
+            </div>
+            <span>
+            <a href="https://twitter.com/mertskaplan">@<span><%= getUserProfileCard.username %></span></a>
+            </span>
+          </div>
+
+          <div class="twPc-divStats">
+            <ul class="twPc-Arrange">
+              <li class="twPc-ArrangeSizeFit">
+                <a href="" title="9.840 Tweet">
+                  <span class="twPc-StatLabel twPc-block">Tweets</span>
+                  <span class="twPc-StatValue">9.840</span>
+                </a>
+              </li>
+
+              <li class="twPc-ArrangeSizeFit">
+                <a href="" title="885 Following">
+                  <span class="twPc-StatLabel twPc-block">Following</span>
+                  <span class="twPc-StatValue"><%= followingcount %></span>
+                </a>
+              </li>
+
+              <li class="twPc-ArrangeSizeFit">
+                <a href="" title="1.810 Followers">
+                  <span class="twPc-StatLabel twPc-block">Followers</span>
+                  <span class="twPc-StatValue"><%= followercount %></span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12">
+      <div class="well clearfix">
+        <textarea class="form-control" rows="4" name="tweetArea" id="tweetArea"  style="" ></textarea><br/>
+        <button class="btn btn-primary pull-right" id="Tweet" name="Tweet">Tweet</button>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+
+    </div>
+  </div>
+
+    <div class="row">
+
+      <div class="col-md-6 col-md-offset-3 col-sm-12" >
+
+        <div id="temp" style="list-style-type: none;">
+          <% for(let i = tweet.length-1;i >= 0 ; i--) {%>
+
+              <div class="well twtdiv row" style="margin-bottom: -18px;background-color: #ffffff;">
+                <div class=col-md-2>
+                  <img src="<%= tweet[i].path %>" class="img-circle" alt="Cinque Terre" width="48" height="48">
+                </div>
+
+                <div class="col-md-10">
+                <strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %>&nbsp;&nbsp;&nbsp;  <%= tweet[i].date %><br/><p><%= tweet[i].tweet %></p><br/>
+                <div class="row" style="margin-bottom: 0px;">
+
+                  <input type="image" src="images/twitterLike.png" id="like" style="height: 20px;width: 20px;" name="">
+                </div>
+              </div>
+              </div>
+            <% } %>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+  $("#Tweet").click(function() {
+    let tweet = document.getElementById("tweetArea").value;
+    document.getElementById("tweetArea").value = "";
+    $.ajax({
+      method: "POST",
+      url: "/createTweet",
+      data: { tweet : tweet }
+    })
+    .done(function( data ) {
+      console.log("msg.tweet",data);
+       $("#temp").prepend('<div class="well twtdiv"><img src="<%= getUserProfileCard.img %>" class="img-circle" width="48" height="48"/><b><%= getUserProfileCard.name %></b><br/>'+data+'</div>');
+
+    });
+  })
+</script>
+<script type="text/javascript">
+  $("#like").click(function(){
+    $(this).toggleClass("is-active");
+  })
+</script>
+
+</body>
 </html>
 

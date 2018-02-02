@@ -5,7 +5,7 @@
 <head>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/stylesheet/style.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
 <% include headerAfterLogin %>
@@ -40,7 +40,8 @@
           <div class="form-group">
             <label class="col-lg-3 control-label">Name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" onchange="return allLetter()" value = '<%=checkUser.name%>' name="name" id="name" >
+              <input class="form-control" type="text" onchange="return allLetter()" value = '<%=checkUser.name%>'
+               name="name" id="name" >
               <p id="nameerr" style="color: red"></p>
             </div>
           </div>
@@ -70,7 +71,7 @@
  function ValidateEmail() {
     var formEmail = document.getElementById("email").value;
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if(formEmail.match(mailformat))
+    if (formEmail.match(mailformat))
     {
       document.getElementById("mailerr").innerHTML="";
       return true;
@@ -83,7 +84,7 @@
 function allLetter() {
    var formName = document.getElementById("name").value;
     var letters = /^[A-Za-z]+$/;
-    if(formName.match(letters)) {
+    if (formName.match(letters)) {
       document.getElementById("nameerr").innerHTML="";
       return true;
     } else {

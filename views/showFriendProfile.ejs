@@ -1,81 +1,141 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
-    <head>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <link rel="stylesheet" href="/stylesheet/style.css">
-    </head>
+	<head>
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/stylesheets/style.css">
+		<% include headerAfterLogin %>
+	</head>
 
-  <body>
-    <% include headerAfterLogin %>
+	<body>
+		<div class="container">
+			<div class="row" style="    background-color: #fff;">
+				<a class="twPc-bg twPc-block" style="    height: 200px;"></a>
+					<div>
+						<div class="twPc-button">
+							<a href="https://twitter.com/sathwara_mihir" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">Follow @mertskaplan</a>
+						</div>
 
-    <div class="container">
-      <h1></h1>
-      <hr>
-      <div class="row">
-      <!-- left column -->
-        <div class="col-xs-12 col-sm-6 col-md-6">
-            <div class="well well-sm">
-              <div class="row">
-                <div class="col-sm-6 col-md-4">
-                  <img src="4.jpg" alt="" class="img-rounded img-responsive" />
-                </div>
-                <div class="col-sm-6 col-md-8">
-                <h4><%= checkUser.name %></h4>
-                  <input type="hidden" value="<%= username %>" id="username" name="username">
-                      <%= checkUser.username%>
-                  <input type="hidden" value="<%= checkUser.username %>" id="friendUsername" name="friendUsername">
-                   <p>  Username :<%=checkUser.username%></p>
-                   <p>  Username :<%= status%></p>
-                    <br />
+						<a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
+							class="twPc-avatarLink">
+							<img alt="Mert Salih Kaplan" src="<%= checkUser.img %>" class="twPc-avatarImg" style="height: 150px;width: 150px">
+						</a>
 
-                      <%if(status == "follow") { %>
-                        <button class="btn btn-primary" id="unfollow"><%= status %></button>
-                      <% } else { %>
-                        <button class="btn btn-primary" id="follow" ><%= status %></button>
-                      <% } %>
-                </div>
-              </div>
-        </div>
-        </div>
-        </div>
-      <!-- edit form column -->
+						<div class="twPc-divUser">
+							<div class="twPc-divName">
+								<a href="https://twitter.com/sathwara_mihir""><%= checkUser.name %></a>
+								 <input type="hidden" value="<%= username %>" id="username" name="username">
+									<input type="hidden" value="<%= checkUser.username %>" id="friendUsername" name="friendUsername">
+									 <%if (status == "follow") { %>
+										 <button class="btn btn-primary btn-lg pull-right" id="unfollow"><%= status %></button>
+									 <% } else { %>
+										 <button class="btn btn-primary btn-lg pull-right" id="follow" ><%= status %></button>
+									 <% } %>
+							<!-- <input type="submit" class="btn btn-primary btn-lg pull-right" id="editProfile"  value="Edit Profile"/> -->
+							</div>
+							<span>
+							<a href="https://twitter.com/mertskaplan">@<span><%= checkUser.username %></span></a>
+							</span>
+						</div>
 
-    </div>
+						<div class="twPc-divStats">
+							<ul class="twPc-Arrange">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+								<li class="twPc-ArrangeSizeFit">
+									<button id="tweet" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Tweet</span>
+										<span class="twPc-StatValue">Tweet <%= %></span>
+									</button>
+								</li>
 
-    <script type="text/javascript">
-    $("#follow").click(function(){
+								<li class="twPc-ArrangeSizeFit">
+									<button id="followingcount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Following</span>
+										<span class="twPc-StatValue"></span>
+									</button>
+								</li>
 
-        let myUsername = document.getElementById('username').value;
-        console.log("myUsername",myUsername);
-        let friendUsername = document.getElementById('friendUsername').value;
-          $.ajax({
-                method: "POST",
-                url: "/follow",
-                data: {myUsername : myUsername,friendUsername : friendUsername}
-              })
-              .done(function( msg ) {
-                location.reload()
-              });
-      });
-    </script>
-    <script type="text/javascript">
-      $("#unfollow").click(function(){
+								<li class="twPc-ArrangeSizeFit">
+									<button id="followercount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">
+										<span class="twPc-StatLabel twPc-block">Followers</span>
+										<span class="twPc-StatValue"></span>
+										</button>
 
-      let myUsername = document.getElementById('username').value;
-      let friendUsername = document.getElementById('friendUsername').value;
-        $.ajax({
-              method: "POST",
-              url: "/unfollow",
-              data: {myUsername : myUsername,friendUsername : friendUsername}
-            })
-            .done(function( msg ) {
-              location.reload()
-            });
-    });
-    </script>
-  </body>
+								</li>
+							</ul>
+						</div>
+				</div>
+	</div>
+
+	<div class="row" style="padding-top : 7px;">
+		<div class="col-md-3">
+			<h5><b> Username : </b><%= checkUser.username %></h5>
+			<input type="hidden" name="friendUsername" id="friendUsername">
+		</div>
+		<div class="col-md-6 well" id="followingA" style="word-break:break-all;background-color: #fff;">
+
+
+		</div>
+		<div class="col-md-3 well"></div>
+	</div>
+
+
+</div>
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+		<script type="text/javascript">
+		$("#follow").click(function() {
+				// alert("aaa");
+				let myUsername = document.getElementById('username').value;
+				console.log("myUsername",myUsername);
+				let friendUsername = document.getElementById('friendUsername').value;
+					$.ajax({
+								method: "POST",
+								url: "/follow",
+								data: {myUsername : myUsername,friendUsername : friendUsername}
+							})
+							.done(function( msg ) {
+								location.reload()
+							});
+			});
+		</script>
+		<script type="text/javascript">
+			$("#unfollow").click(function() {
+
+			let myUsername = document.getElementById('username').value;
+			let friendUsername = document.getElementById('friendUsername').value;
+				$.ajax({
+							method: "POST",
+							url: "/unfollow",
+							data: {myUsername : myUsername,friendUsername : friendUsername}
+						})
+						.done(function( msg ) {
+							location.reload()
+						});
+		});
+		</script>
+
+		<script type="text/javascript">
+	 $("#tweet").click(function() {
+		$( "#followingA" ).empty();
+		let friendUsername = document.getElementById("friendUsername").value;
+		// $( "#following" ).load( "p.ejs" );
+			$.ajax({
+				method: "POST",
+				url: "/getFriendTweets",
+				data : { friendUsername : friendUsername }
+			})
+			.done(function( data ) {
+				console.log("===",data)
+				for(let i = data.length-1 ; i>=0 ; i--) {
+					// console.log("m"+data[i].following);
+					$("#followingA")
+					.prepend('<li class="well"><img src="<%=  checkUser.img %>" class="img-circle" style="word-break:break-all;" width="48" height="48" /><b><%=  checkUser.name %> </b><br/>'+data[i].tweet+'</li>');
+				}
+			});
+	 });
+</script>
+</body>
 </html>
 
