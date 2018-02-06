@@ -23,12 +23,14 @@ exports.registerPost = async function (req,res) {
   let name =  req.body.name;
   let email =  req.body.email;
   let pw =  req.body.pw;
+  let img = "/images/defaultprofile.png"
 
   let newUser = new User({
     name: name,
     username: username,
     email: email,
     password: pw,
+    img : "/images/defaultprofile.png"
   });
 
   let checkUser = await User.getUser(
@@ -143,7 +145,11 @@ exports.resetpwPost = async function(req, res) {
 
   let pw = req.body.pw;
   let confirmpw = req.body.confirmpw;
+  let hashconfirmpw;
+
   if (pw == confirmpw) {
+    bcrypt.hash(confirmpw, 10,async function(err, hash) {
+    hashconfirmpw = hash;
     let user = await User.updateUser(
       {
         email : TempMail
@@ -151,12 +157,12 @@ exports.resetpwPost = async function(req, res) {
       {
         $set :
         {
-          password : confirmpw
+          password : hashconfirmpw
         }
       });
-
+    });
     res.redirect("./login");
-  }else{
+  } else {
     res.send("plz enter same pw on both textfield");
   }
 }

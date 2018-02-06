@@ -11,7 +11,9 @@ exports.searchFriendGet = function(req,res) {
 // Search User to follow
 exports.searchFriendPost = async function(req,res) {
 	Query = req.body.search;
+	// { $regex: '\Query.*'} }
 	let users = await User.searchUser({ name: Query });
+	console.log(">>	",users);
 	if (users) {
 		res.send(users);
 	}else{
@@ -71,11 +73,22 @@ exports.showFriendProfileGet = async function(req,res) {
 		let followingList = await Follower.getFollowingList
 									({ username : req.session.uname, status : true});
 		let checkUser = await User.getUser( { username  : friendUsername } );
+		let followercount = await Follower.getFollowersCount
+									({ following : friendUsername, status : true});
+
+	  let followingcount = await Follower.getFollowersCount
+	  							({ username : friendUsername, status : true});
+  	let getTweetCount = await Feed.getTweetCount({username : friendUsername});
+
+
 
 		res.render('showFriendProfile', {
 		checkUser : checkUser,username : req.session.uname,
 		status : status,
 		getFriendTweets : getFriendTweets,
+		followercount : followercount,
+		followingcount : followingcount,
+		getTweetCount : getTweetCount
 	});
 }
 
@@ -120,10 +133,17 @@ exports.unfollowPost =async function(req, res) {
 	res.send("unfollowFrien success")
 }
 
-//Get Followinglist for logged in user
+//Get Followinglist
 exports.getFollowingListPost = async function(req,res) {
-	let followingList = await Follower.getFollowingList(
+	let followingList;
+	if (req.body.friendUsername == undefined) {
+		followingList = await Follower.getFollowingList(
 								{ username : req.session.uname, status : true});
+	} else {
+		followingList = await Follower.getFollowingList(
+								{ username : req.body.friendUsername, status : true});
+	}
+
 
 	if (followingList == null) {
 		res.send("newFollowing");
@@ -133,10 +153,18 @@ exports.getFollowingListPost = async function(req,res) {
 
 }
 
-//Get Followerlist for logged in user
+//Get Followerlist
 exports.getFollowerListPost = async function(req,res) {
-	let followerList = await Follower.getFollowingList(
-									{ following : req.session.uname, status : true});
+	let followerList;
+	if (req.body.friendUsername == undefined) {
+		followerList = await Follower.getFollowingList(
+								{ following : req.session.uname, status : true});
+	} else {
+		followerList = await Follower.getFollowingList(
+								{ following : req.body.friendUsername, status : true});
+	}
+
+
 
 	if (followerList == null) {
 		res.send("newFollowing");

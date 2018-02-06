@@ -7,13 +7,13 @@
 		<% include headerAfterLogin %>
 	</head>
 
-	<body>
+	<body style="background-color: #e6ecf0">
 		<div class="container">
 			<div class="row" style="    background-color: #fff;">
 				<a class="twPc-bg twPc-block" style="    height: 200px;"></a>
 					<div>
 						<div class="twPc-button">
-							<a href="https://twitter.com/sathwara_mihir" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">Follow @mertskaplan</a>
+							<a href="" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= checkUser.username %></a>
 						</div>
 
 						<a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
@@ -43,20 +43,20 @@
 
 								<li class="twPc-ArrangeSizeFit">
 									<button id="tweet" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Tweet</span>
-										<span class="twPc-StatValue">Tweet <%= %></span>
+										<span class="twPc-StatValue">Tweet <%= getTweetCount %></span>
 									</button>
 								</li>
 
 								<li class="twPc-ArrangeSizeFit">
 									<button id="followingcount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Following</span>
-										<span class="twPc-StatValue"></span>
+										<span class="twPc-StatValue"><%= followingcount %></span>
 									</button>
 								</li>
 
 								<li class="twPc-ArrangeSizeFit">
 									<button id="followercount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">
 										<span class="twPc-StatLabel twPc-block">Followers</span>
-										<span class="twPc-StatValue"></span>
+										<span class="twPc-StatValue"><%= followercount %></span>
 										</button>
 
 								</li>
@@ -70,11 +70,11 @@
 			<h5><b> Username : </b><%= checkUser.username %></h5>
 			<input type="hidden" name="friendUsername" id="friendUsername">
 		</div>
-		<div class="col-md-6 well" id="followingA" style="word-break:break-all;background-color: #fff;">
+		<div class="col-md-6" id="followingA" style="word-break:break-all;">
 
 
 		</div>
-		<div class="col-md-3 well"></div>
+		<!-- <div class="col-md-3 well"></div> -->
 	</div>
 
 
@@ -131,7 +131,50 @@
 				for(let i = data.length-1 ; i>=0 ; i--) {
 					// console.log("m"+data[i].following);
 					$("#followingA")
-					.prepend('<li class="well"><img src="<%=  checkUser.img %>" class="img-circle" style="word-break:break-all;" width="48" height="48" /><b><%=  checkUser.name %> </b><br/>'+data[i].tweet+'</li>');
+					.prepend('<div class="well" style="background-color:#ffffff"><img src="<%=  checkUser.img %>" class="img-circle" style="word-break:break-all;" width="48" height="48" /><b><%=  checkUser.name %> </b><br/>'+data[i].tweet+'</div>');
+				}
+			});
+	 });
+</script>
+
+<script type="text/javascript">
+	 $("#followingcount").click(function() {
+		$( "#followingA" ).empty();
+		let friendUsername = document.getElementById('friendUsername').value;
+			// $("following?").show();
+			$.ajax({
+				method: "POST",
+				url: "/following",
+				data : { friendUsername : friendUsername }
+			})
+			.done(function( data ) {
+				console.log("===",data)
+				for(let i = data.length-1 ; i>=0 ; i--) {
+					console.log("m"+data[i].following);
+					$("#followingA")
+					.prepend('<div class="well"><a href="/showFriendProfile?id='
+						+data[i].following+'">'+data[i].following+'</a></div>');
+				}
+			});
+	 });
+</script>
+<script type="text/javascript">
+	 $("#followercount").click(function() {
+		$( "#followingA" ).empty();
+		let friendUsername = document.getElementById('friendUsername').value;
+		// $( "#following" ).load( "p.ejs" );
+			$.ajax({
+				method: "POST",
+				url: "/follower",
+				data : { friendUsername : friendUsername }
+			})
+			.done(function( data ) {
+				console.log("===",data)
+				for(let i = data.length-1 ; i>=0 ; i--) {
+					console.log("m"+data[i].following);
+					$("#followingA")
+					.prepend('<div class="well"><a href="/showFriendProfile?id='
+						+data[i].username+'">'+data[i].username+'</a></div>');
 				}
 			});
 	 });

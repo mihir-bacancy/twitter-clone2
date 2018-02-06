@@ -52,6 +52,9 @@ router.post('/following',searchFriendController.getFollowingListPost);
 router.post('/follower',searchFriendController.getFollowerListPost);
 router.post('/getTweet',searchFriendController.getTweetPost);
 router.post('/getFriendTweets',searchFriendController.getFriendTweetPost);
+router.post('/like',feedController.likePost);
+router.post('/unLike',feedController.unLikePost);
+
 
 
 

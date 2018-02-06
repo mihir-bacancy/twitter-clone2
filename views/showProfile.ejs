@@ -7,16 +7,16 @@
 		<% include headerAfterLogin %>
 	</head>
 
-	<body>
+	<body  style="background-color: #e6ecf0">
 		<div class="container">
 			<div class="row" style="    background-color: #fff;">
 				<a class="twPc-bg twPc-block" style="    height: 200px;"></a>
 				<div>
 
 					<div class="twPc-button">
-						<a href="https://twitter.com/sathwara_mihir" class="twitter-follow-button"
+						<a href="" class="twitter-follow-button"
 						 data-show-count="false" data-size="large" data-show-screen-name="false"
-						  data-dnt="true">Follow @mertskaplan</a>
+						  data-dnt="true">@<%= checkUser.username %></a>
 					</div>
 
 					<a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
@@ -42,7 +42,7 @@
 
 							<li class="twPc-ArrangeSizeFit">
 								<button id="tweet" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Tweet</span>
-									<span class="twPc-StatValue">Tweet <%= %></span>
+									<span class="twPc-StatValue"><%= getTweetCount %></span>
 								</button>
 							</li>
 
@@ -68,9 +68,9 @@
 		<div class="col-md-3">
 			<h5><b> Username : </b><%= checkUser.username %></h5>
 		</div>
-		<div class="col-md-6 well" id="followingA" style="word-break:break-all;background-color: #fff;list-style-type: none;">
+		<div class="col-md-6" id="followingA" style="word-break:break-all;list-style-type: none;">
 		</div>
-		<div class="col-md-3 well"></div>
+		<!-- <div class="col-md-3 well"></div> -->
 	</div>
 
 
@@ -112,7 +112,7 @@
 					console.log("m"+data[i].following);
 					$("#followingA")
 					.prepend('<li class="well"><a href="/showFriendProfile?id='
-						+data[i].following+'">'+data[i].username+'</a></li>');
+						+data[i].username+'">'+data[i].username+'</a></li>');
 				}
 			});
 	 });
@@ -130,7 +130,7 @@
 				for(let i = data.length-1 ; i>=0 ; i--) {
 					// console.log("m"+data[i].following);
 					$("#followingA")
-					.prepend('<li class="well"><img src="<%=  checkUser.img %>" class="img-circle" style="word-break:break-all;" width="48" height="48" /><b><%=  checkUser.username %> </b><br/>'+data[i].tweet+'</li>');
+					.prepend('<div class="well" style="background-color:#ffffff"><img src="<%=  checkUser.img %>" class="img-circle" style="word-break:break-all;" width="48" height="48" /><b><%=  checkUser.username %> </b><br/>'+data[i].tweet+'</div>');
 				}
 			});
 	 });

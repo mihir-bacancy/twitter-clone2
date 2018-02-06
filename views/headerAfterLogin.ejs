@@ -13,8 +13,9 @@
 
   }
 </style>
-<div class="bs-example">
+<div class="bs-example" >
     <nav class="navbar navbar-default" data-spy="affix" data-offset-top="true">
+
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -23,13 +24,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/home" class="navbar-brand">Twitter</a>
-            <img src="twitterlogo.png" class="twitterlogo" />
+
+
 
         </div>
         <!-- Collection of nav links, forms, and other content for toggling -->
-        <div id="navbarCollapse" class="collapse navbar-collapse">
-
+        <div id="navbarCollapse" class="collapse navbar-collapse" style="background-color: #ffffff;">
+        	<a href="/home"><img clas="center-block" src="twitterlogo.png" class="twitterlogo"  /></a>
             <form class="navbar-form navbar-left">
               <div class="input-group">
                     <input type="text" class="form-control search" placeholder="Search friends" name="search" id="search">
@@ -67,7 +68,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $("#searchResult").hide();
-    console.log("called");
+
 });
 </script>
 
@@ -96,6 +97,12 @@ $(document).ready(function(){
     })
   });
 
+</script>
+
+<script type="text/javascript">
+	// $("#search").focusout(function(){
+	// 	$("#searchResult").hide();
+	// })
 </script>
 
 

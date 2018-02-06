@@ -1,11 +1,10 @@
 const User   = require('../models/users.models');
 const session = require('express-session');
 const Feed = require('../models/feed.models');
-
-const fs = require('fs');
 const Follower   = require('../models/follow.models');
 const following   = require('../models/users.models');
 
+const fs = require('fs');
 
 exports.homeGet = async function (req, res) {
 
@@ -17,6 +16,8 @@ exports.homeGet = async function (req, res) {
                   { following : req.session.uname, status : true});
   let followingcount = await Follower.getFollowersCount(
                   { username : req.session.uname, status : true});
+  let getTweetCount = await Feed.getTweetCount(
+                  {username : req.session.uname});
 
   let getTweets = [];
   let getUser;
@@ -25,9 +26,9 @@ exports.homeGet = async function (req, res) {
   let dateTemp;
 
   for(let k = 0;k < followingList.length; k++) {
-    console.log("runnig");
-    getTweets = await Feed.getTweet({username : followingList[k].following});
-      // getTweets[k] = await Feed.getTweet({username : followingList[k].following});
+    getTweets = await Feed.getTweet (
+      {username:followingList[k].following});
+
     getUser = await User.getUser( { username : followingList[k].following } );
 
     for (let count=getTweets.length-1; count >= 0 ; count--) {
@@ -37,8 +38,8 @@ exports.homeGet = async function (req, res) {
       getTweets[count].date = dateTemp;
       getAllTweets.push(getTweets[count]);
     }
-      // getTweets[k].path = getUser.img;
   }
+
   getAllTweets.sort((a,b) => {
     if(a.createdAt > b.createdAt)
       return 1;
@@ -48,32 +49,41 @@ exports.homeGet = async function (req, res) {
       return 0;
   })
 
+  // console.log(">>>",getAllTweets.likes['test2']);
   res.render('home',{
     tweet : getAllTweets,
     getUser:getUser,
     getUserProfileCard : getUserProfileCard,
     followercount : followercount,
-    followingcount : followingcount
+    followingcount : followingcount,
+    getTweetCount : getTweetCount,
   });
 }
 
-
+//Show Your own Profile
 exports.showProfileGet = async function(req,res) {
    let checkUser = await User.getUser( { username : req.session.uname } );
 
-   let followercount = await Follower.getFollowersCount({ following : req.session.uname, status : true});
-   let followingcount = await Follower.getFollowersCount({ username : req.session.uname, status : true});
-   let getTweets = await Feed.getTweet({username : req.session.uname});
+   let followercount = await Follower.getFollowersCount(
+                      { following : req.session.uname, status : true});
+   let followingcount = await Follower.getFollowersCount(
+                      { username : req.session.uname, status : true});
+   let getTweets = await Feed.getTweet(
+                      {username : req.session.uname});
+   let getTweetCount = await Feed.getTweetCount(
+                      {username : req.session.uname});
+   console.log(">>>>>>>>>>..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",getTweets);
 
    res.render('showProfile',
     { checkUser : checkUser,
       followercount : followercount,
       followingcount:followingcount,
       getTweets : getTweets,
+      getTweetCount : getTweetCount,
     });
 }
 
-
+// Render on edit profile
 exports.profileGet =async function(req,res) {
    let checkUser = await User.getUser( {
      username : req.session.uname
@@ -82,32 +92,39 @@ exports.profileGet =async function(req,res) {
 
 }
 
+// submit and save edited profile
 exports.profilePost = async function(req,res) {
-
-  console.log(req.files == null)
-  let img;
-  if (req.files.length == 0) {
-    img = "public/images/defaultprofile.png"
-  } else {
-    img = req.files[0].path.replace("public","");
-  }
-  console.log(req.body);
 
   let name =  req.body.name;
   let email =  req.body.email;
   let pw =  req.body.pw;
+  let img;
+
   let checkUser =await User.getUser( { email : email } );
-  console.log("Name",name);
-  let updatePro = await User.updateProfile(
+  console.log("img",checkUser.img);
+  if (req.files.length == 0) {
+    img = checkUser.img;
+    let updatePro = await User.updateProfile(
     {
       username : req.session.uname
     },name,img,pw,email);
+
+  } else {
+    img = req.files[0].path.replace("public","");
+    let updatePro = await User.updateProfile(
+    {
+      username : req.session.uname
+    },name,img,pw,email);
+
+  }
+
+
   res.redirect('/showProfile');
 
 }
 
 
-
+// To put tweet time in proper format
 function formatDate(dateFrom) {
 
   let monthNames = ["Jan", "Feb", "March", "Apr", "May", "June",
@@ -121,8 +138,5 @@ function formatDate(dateFrom) {
        min = d.getMinutes();
 
     let date = day +" "+ month +" "+ year +"   "+hrs+":"+min;
-
     return date;
-
-
 }

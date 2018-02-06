@@ -36,7 +36,7 @@
               <li class="twPc-ArrangeSizeFit">
                 <a href="" title="9.840 Tweet">
                   <span class="twPc-StatLabel twPc-block">Tweets</span>
-                  <span class="twPc-StatValue">9.840</span>
+                  <span class="twPc-StatValue"><%= getTweetCount %></span>
                 </a>
               </li>
 
@@ -59,10 +59,12 @@
       </div>
     </div>
 
-    <div class="col-md-6 col-sm-12">
-      <div class="well clearfix">
-        <textarea class="form-control" rows="4" name="tweetArea" id="tweetArea"  style="" ></textarea><br/>
-        <button class="btn btn-primary pull-right" id="Tweet" name="Tweet">Tweet</button>
+    <div class="col-md-6" style=" width: 50%">
+      <div class="well clearfix row" style="background-color: #e8f4fb">
+        <div class="col-md-1 col-sm-1 col-xs-1"><img src="<%= getUserProfileCard.img %>" class="img-circle" alt="Cinque Terre" width="32" height="32"></div>
+        <div class="col-md-11"><textarea class="form-control" rows="4" name="tweetArea" id="tweetArea" placeholder="What's Happening?"  style="border-color: #a3d4f2;border-radius: 17px;" ></textarea><br/>
+        <button class="btn btn-primary pull-right" id="Tweet" style="border-radius: 50px;background-color: #48aae6" name="Tweet"><b>Tweet</b></button></div>
+
       </div>
     </div>
 
@@ -75,19 +77,44 @@
 
       <div class="col-md-6 col-md-offset-3 col-sm-12" >
 
-        <div id="temp" style="list-style-type: none;">
+        <div id="tweetsFromFollowing" style="list-style-type: none;">
           <% for(let i = tweet.length-1;i >= 0 ; i--) {%>
 
               <div class="well twtdiv row" style="margin-bottom: -18px;background-color: #ffffff;">
-                <div class=col-md-2>
+                <div class="col-md-2">
                   <img src="<%= tweet[i].path %>" class="img-circle" alt="Cinque Terre" width="48" height="48">
                 </div>
-
+                <% let flag %>
                 <div class="col-md-10">
-                <strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %>&nbsp;&nbsp;&nbsp;  <%= tweet[i].date %><br/><p><%= tweet[i].tweet %></p><br/>
-                <div class="row" style="margin-bottom: 0px;">
-
-                  <input type="image" src="images/twitterLike.png" id="like" style="height: 20px;width: 20px;" name="">
+                <strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %><!-- <%= tweet[i]._id %> -->&nbsp;&nbsp;&nbsp;  <%=  tweet[i].date %><br/><p><%= tweet[i].tweet %></p><br/>
+                   <%  for (let j = tweet[i].likes.length-1 ; j>=0 ; j--  ){ %>
+                    <% if (getUserProfileCard.username == tweet[i].likes[j].liker) {
+                      flag = true;
+                      break;
+                     } else {
+                      flag = false;
+                     }  %>
+                  <%} %>
+                  <div class="row" id="likeParent" style="margin-bottom: 0px;">
+                     <% if (flag == true) { %>
+                        <div class="col-md-1 col-sm-1 col-xs-1">
+                          <input type="image" class="unlike" src="images/twitterunLike.png"
+                          onclick="unlike(this)" id="<%= tweet[i]._id %>" style="height: 20px;width: 20px;"
+                          name="<%=tweet[i].likes.length%>">
+                        </div>
+                        <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 1px">
+                          <p id="cnt<%= tweet[i]._id %>" value="q"><%=tweet[i].likes.length%></p>
+                        </div>
+                     <% } else { %>
+                        <div class="col-md-1 col-sm-1 col-xs-1">
+                           <input type="image" class="like"  src="images/twitterLike.png"
+                           onclick="like(this)" id="<%= tweet[i]._id %>" style="height: 20px;width: 20px;"
+                           name="<%=tweet[i].likes.length%>">
+                        </div>
+                        <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 1px">
+                          <p id="cnt<%= tweet[i]._id %>" value="q"><%=tweet[i].likes.length%></p>
+                        </div>
+                     <% } %>
                 </div>
               </div>
               </div>
@@ -112,8 +139,9 @@
       data: { tweet : tweet }
     })
     .done(function( data ) {
-      console.log("msg.tweet",data);
-       $("#temp").prepend('<div class="well twtdiv"><img src="<%= getUserProfileCard.img %>" class="img-circle" width="48" height="48"/><b><%= getUserProfileCard.name %></b><br/>'+data+'</div>');
+
+       $("#tweetsFromFollowing").prepend('<div class="well twtdiv row"><div class="col-md-2"><img src="<%= getUserProfileCard.img %>" class="img-circle" width="48" height="48"/></div><div><strong><%= getUserProfileCard.name %></strong>&nbsp;@<%= getUserProfileCard.username %> &nbsp;&nbsp;&nbsp; Just now<br/>'+data+'</div></div>');
+
 
     });
   })
@@ -123,6 +151,53 @@
     $(this).toggleClass("is-active");
   })
 </script>
+
+<script type="text/javascript">
+
+  function like(obj){
+    console.log(obj);
+    let like = obj.id;
+    let name = parseInt(obj.name) + 1;
+    $.ajax({
+      method: "POST",
+      url: "/like",
+      data: { _id : like }
+    })
+    .done(function( data ) {
+      console.log(">>>",data);
+
+      $("#"+like).attr({src : "images/twitterunLike.png",onclick : "unlike(this)"});
+      $("#cnt"+like).text(data.likercount);
+
+    })
+  }
+
+</script>
+<script type="text/javascript">
+
+  function unlike(obj){
+    console.log(obj);
+    let unlike = obj.id;
+    let name = parseInt(obj.name) - 1;
+    $.ajax({
+      method: "POST",
+      url: "/unLike",
+      data: { _id : unlike }
+    })
+    .done(function( data ) {
+
+          $("#"+unlike).attr({src : "images/twitterLike.png",onclick : "like(this)"});
+       $("#cnt"+unlike).text(data.likercount);
+
+
+    })
+  }
+
+</script>
+<script type="text/javascript">
+
+</script>
+
 
 </body>
 </html>
