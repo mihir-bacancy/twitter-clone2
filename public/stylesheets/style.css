@@ -137,6 +137,11 @@
     margin-left: 11px;
     padding: 10px 0;
 }
+.twPc-divStatsFrnd {
+    margin-left: 245px;
+    padding: 10px 0;
+    padding-top: 21px;
+}
 .twPc-Arrange {
     box-sizing: border-box;
     display: table;
@@ -394,3 +399,4 @@ header {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+

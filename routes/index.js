@@ -41,8 +41,8 @@ router.get('/showProfile',isAuthenticated,homeController.showProfileGet);
 router.get('/searchFriend',searchFriendController.searchFriendGet);
 router.post('/searchFriend',searchFriendController.searchFriendPost);
 router.get('/showFriendProfile',searchFriendController.showFriendProfileGet);
-router.post('/follow',searchFriendController.followPost);
-router.post('/unfollow',searchFriendController.unfollowPost);
+router.post('/follow',searchFriendController.unfollowPost);
+router.post('/unfollow',searchFriendController.followPost);
 
 router.post('/createTweet',feedController.createTweetPost);
 
@@ -50,15 +50,14 @@ router.post('/createTweet',feedController.createTweetPost);
 
 router.post('/following',searchFriendController.getFollowingListPost);
 router.post('/follower',searchFriendController.getFollowerListPost);
+
 router.post('/getTweet',searchFriendController.getTweetPost);
 router.post('/getFriendTweets',searchFriendController.getFriendTweetPost);
+
 router.post('/like',feedController.likePost);
 router.post('/unLike',feedController.unLikePost);
 
-
-
-
-
+router.post('/editTweet',feedController.editTweetPost);
 
 module.exports = router;
 

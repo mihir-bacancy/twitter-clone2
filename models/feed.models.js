@@ -86,9 +86,7 @@ module.exports.like = function(query,condition) {
 }
 
 module.exports.unLike = function(query,condition) {
-
   return new Promise((resolve, reject) => {
-    // db.profiles.update( { _id: 1 }, { $pull: { votes: req.session.uname } } )
     Feed.update(query,condition,function(err ,data) {
       if (err) {
         reject(err);
@@ -99,15 +97,26 @@ module.exports.unLike = function(query,condition) {
   })
 }
 
-module.exports.getLikerCount = function(id) {
-  // console.log(user);
+
+module.exports.getLiker = function(id) {
   return new Promise((resolve, reject) => {
-    // Feed.findOne(id).likes.length;
   Feed.findOne(id, function(err ,data) {
     if (err) {
       reject(err);
     }
     resolve(data);
   });
+  })
+}
+
+module.exports.updateTweet = function(query,condition) {
+  return new Promise((resolve, reject) => {
+    Feed.update(query,condition,function(err ,data) {
+      if (err) {
+        reject(err);
+      }
+      resolve(data);
+    });
+
   })
 }

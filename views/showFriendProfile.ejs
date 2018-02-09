@@ -86,7 +86,6 @@
 
 		<script type="text/javascript">
 		$("#follow").click(function() {
-				// alert("aaa");
 				let myUsername = document.getElementById('username').value;
 				console.log("myUsername",myUsername);
 				let friendUsername = document.getElementById('friendUsername').value;
@@ -120,7 +119,6 @@
 	 $("#tweet").click(function() {
 		$( "#followingA" ).empty();
 		let friendUsername = document.getElementById("friendUsername").value;
-		// $( "#following" ).load( "p.ejs" );
 			$.ajax({
 				method: "POST",
 				url: "/getFriendTweets",
@@ -141,7 +139,6 @@
 	 $("#followingcount").click(function() {
 		$( "#followingA" ).empty();
 		let friendUsername = document.getElementById('friendUsername').value;
-			// $("following?").show();
 			$.ajax({
 				method: "POST",
 				url: "/following",
