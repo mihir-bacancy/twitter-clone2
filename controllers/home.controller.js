@@ -1,21 +1,21 @@
-const User   = require('../models/users.models');
+const User  = require('../models/users.models');
 const session = require('express-session');
 const Feed = require('../models/feed.models');
-const Follower   = require('../models/follow.models');
-const following   = require('../models/users.models');
+const Follower  = require('../models/follow.models');
+const following  = require('../models/users.models');
 
 const fs = require('fs');
 
-exports.homeGet = async function (req,  res) {
+exports.homeGet = async function (req, res) {
 
 	let followingList = await Follower.getFollowingList(
-									{ username : req.session.uname,  status : true});
+									{ username : req.session.uname, status : true});
 	let getUserProfileCard = await User.getUser(
 									{ username : req.session.uname} );
 	let followercount = await Follower.getFollowersCount(
-									{ following : req.session.uname,  status : true});
+									{ following : req.session.uname, status : true});
 	let followingcount = await Follower.getFollowersCount(
-									{ username : req.session.uname,  status : true});
+									{ username : req.session.uname, status : true});
 	let getTweetCount = await Feed.getTweetCount(
 									{username : req.session.uname});
 
@@ -65,9 +65,9 @@ exports.showProfileGet = async function(req, res) {
 	 let checkUser = await User.getUser( { username : req.session.uname } );
 
 	 let followercount = await Follower.getFollowersCount(
-											{ following : req.session.uname,  status : true});
+											{ following : req.session.uname, status : true});
 	 let followingcount = await Follower.getFollowersCount(
-											{ username : req.session.uname,  status : true});
+											{ username : req.session.uname, status : true});
 	 let getTweets = await Feed.getTweet(
 											{username : req.session.uname});
 	 let getTweetCount = await Feed.getTweetCount(
@@ -102,9 +102,9 @@ exports.profileGet =async function(req, res) {
 // submit and save edited profile
 exports.profilePost = async function(req, res) {
 
-	let name =  req.body.name;
-	let email =  req.body.email;
-	let pw =  req.body.pw;
+	let name = req.body.name;
+	let email = req.body.email;
+	let pw = req.body.pw;
 	let img;
 
 	let checkUser =await User.getUser( { email : email } );
@@ -134,16 +134,16 @@ exports.profilePost = async function(req, res) {
 // To put tweet time in proper format
 function formatDate(dateFrom) {
 
-	let monthNames = ["Jan",  "Feb",  "March",  "Apr",  "May",  "June",
-	"Jul",  "Aug",  "Sept",  "Oct",  "Nov",  "Dec"];
+	let monthNames = ["Jan", "Feb", "March", "Apr", "May", "June",
+	"Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
 		let d = new Date(dateFrom),
-				month =  monthNames[d.getMonth() + 1  ],
+				month = monthNames[d.getMonth() + 1 ],
 				day = d.getDate(),
 				year = d.getFullYear(),
 				hrs = d.getHours(),
 			 min = d.getMinutes();
 
-		let date = day +" "+ month +" "+ year +"   "+hrs+":"+min;
+		let date = day +" "+ month +" "+ year +"  "+hrs+":"+min;
 		return date;
 }

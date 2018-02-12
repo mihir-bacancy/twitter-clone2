@@ -64,7 +64,7 @@
 
 			<div class="well clearfix row" style="background-color: #e8f4fb">
 				<div class="col-md-1 col-sm-1 col-xs-1"><img src="<%= getUserProfileCard.img %>" class="img-circle" alt="Cinque Terre" width="32" height="32"></div>
-				<div class="col-md-11"><textarea class="form-control" rows="4" name="tweetArea" id="tweetArea" placeholder="What's Happening?"  style="border-color: #a3d4f2;border-radius: 17px;" ></textarea><br/>
+				<div class="col-md-11"><textarea class="form-control" rows="4" name="tweetArea" id="tweetArea" placeholder="What's Happening?" style="border-color: #a3d4f2;border-radius: 17px;" ></textarea><br/>
 				<button class="btn btn-primary pull-right" id="Tweet" style="border-radius: 50px;background-color: #48aae6" name="Tweet"><b>Tweet</b></button></div>
 
 
@@ -90,14 +90,14 @@
 								<% let flag %>
 								<div class="col-md-10">
 									<div class="row">
-										<div class="col-md-11  col-sm-11 col-xs-11">
-											<strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %>&nbsp;&nbsp;&nbsp;  <%=  tweet[i].date %>
+										<div class="col-md-11 col-sm-11 col-xs-11">
+											<strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %>&nbsp;&nbsp;&nbsp; <%= tweet[i].date %>
 										</div>
 
 										<!-- start Pop-up For Tweet Editing -->
-										<% if (getUserProfileCard.username ==  tweet[i].username) {%>
+										<% if (getUserProfileCard.username == tweet[i].username) {%>
 										<div class="col-md-1 col-sm-1 col-xs-1" >
-											<a  class="twPc-avatarLink dropdown-toggle" onclick="modal(this)" data-toggle="dropdown" style="margin-top: 2px">
+											<a class="twPc-avatarLink dropdown-toggle" onclick="modal(this)" data-toggle="dropdown" style="margin-top: 2px">
 												<input type="hidden" id="hidetweet<%= tweet[i]._id %>" value="<%=tweet[i].tweet%>"/>
 												<input type="hidden" id="hideid<%= tweet[i]._id %>" value="<%= tweet[i]._id %>"/>
 
@@ -145,13 +145,13 @@
 									</div>
 									<!-- <a href="#myModal" class="btn btn-lg btn-primary" data-toggle="modal">Launch Demo Modal</a> -->
 								<p id="tweet<%= tweet[i]._id %>"><%= tweet[i].tweet %></p>
-									 <%  for (let j = tweet[i].likes.length-1 ; j>=0 ; j--  ){ %>
+									 <% for (let j = tweet[i].likes.length-1 ; j>=0 ; j-- ){ %>
 										<% if (getUserProfileCard.username == tweet[i].likes[j].liker) {
 											flag = true;
 											break;
 										 } else {
 											flag = false;
-										 }  %>
+										 } %>
 									<%} %>
 									<div class="row" id="likeParent" style="margin-bottom: 0px;">
 										 <% if (flag == true) { %>
@@ -165,7 +165,7 @@
 												</div>
 										 <% } else { %>
 												<div class="col-md-1 col-sm-1 col-xs-1">
-													 <input type="image" class="like"  src="images/twitterLike.png"
+													 <input type="image" class="like" src="images/twitterLike.png"
 													 onclick="like(this)" id="<%= tweet[i]._id %>" style="height: 20px;width: 20px;"
 													 name="<%=tweet[i].likes.length%>">
 												</div>

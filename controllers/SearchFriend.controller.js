@@ -1,6 +1,6 @@
 const User = require('../models/users.models');
 const fs = require('fs');
-const Follower   = require('../models/follow.models');
+const Follower  = require('../models/follow.models');
 const Feed = require('../models/feed.models');
 
 exports.searchFriendGet = function(req, res) {
@@ -76,18 +76,18 @@ exports.showFriendProfileGet = async function(req, res) {
 		let getFriendTweets = await Feed.getTweet({username : friendUsername});
 
 		let followingList = await Follower.getFollowingList
-									({ username : req.session.uname,  status : true});
-		let checkUser = await User.getUser( { username  : friendUsername } );
+									({ username : req.session.uname, status : true});
+		let checkUser = await User.getUser( { username : friendUsername } );
 		let followercount = await Follower.getFollowersCount
-									({ following : friendUsername,  status : true});
+									({ following : friendUsername, status : true});
 
-	  let followingcount = await Follower.getFollowersCount
-	  							({ username : friendUsername,  status : true});
-  	let getTweetCount = await Feed.getTweetCount({username : friendUsername});
+	 let followingcount = await Follower.getFollowersCount
+	 							({ username : friendUsername, status : true});
+ 	let getTweetCount = await Feed.getTweetCount({username : friendUsername});
 
 
 
-		res.render('showFriendProfile',  {
+		res.render('showFriendProfile', {
 		checkUser : checkUser, username : req.session.uname,
 		status : status,
 		getFriendTweets : getFriendTweets,
@@ -98,9 +98,9 @@ exports.showFriendProfileGet = async function(req, res) {
 }
 
 //Follow other user
-exports.unfollowPost = async function (req,  res) {
-	let myUsername =  req.session.uname;
-	let friendUsername =  req.body.friendUsername;
+exports.unfollowPost = async function (req, res) {
+	let myUsername = req.session.uname;
+	let friendUsername = req.body.friendUsername;
 	console.log("unFollow called");
 
 	let newFollower = new Follower ({
@@ -116,7 +116,7 @@ exports.unfollowPost = async function (req,  res) {
 		let unfollowFriend = await Follower.updateFollow({$and:[{username:myUsername},
 														{following:friendUsername}]}, {$set:{status:false}});
 		let followingcount = await Follower.getFollowersCount(
-											{ username : req.session.uname,  status : true});
+											{ username : req.session.uname, status : true});
 		res.send({followingcount : followingcount});
 	} else {
 		let followInsert = await Follower.follow(newFollower, function(err, userInfo) {
@@ -132,15 +132,15 @@ exports.unfollowPost = async function (req,  res) {
 }
 
 //follow friends
-exports.followPost =async function(req,  res) {
-	let myUsername =  req.session.uname;
-	let friendUsername =  req.body.friendUsername;
+exports.followPost =async function(req, res) {
+	let myUsername = req.session.uname;
+	let friendUsername = req.body.friendUsername;
 
 	let unfollowFriend = await Follower.updateFollow({$and:[{username:myUsername},
 														{following:friendUsername}]}, {$set:{status:true}});
 
 	let followingcount = await Follower.getFollowersCount(
-											{ username : req.session.uname,  status : true});
+											{ username : req.session.uname, status : true});
 
 	res.send({followingcount : followingcount})
 }
@@ -154,10 +154,10 @@ exports.getFollowingListPost = async function(req, res) {
 
 	if (req.body.friendUsername == undefined) {
 		followingList = await Follower.getFollowingList(
-								{ username : req.session.uname,  status : true});
+								{ username : req.session.uname, status : true});
 	} else {
 		followingList = await Follower.getFollowingList(
-								{ username : req.body.friendUsername,  status : true});
+								{ username : req.body.friendUsername, status : true});
 	}
 
 
@@ -166,7 +166,7 @@ exports.getFollowingListPost = async function(req, res) {
 		checkStatusBtn = await Follower.checkFollow(
 						{ $and : [{	username : req.session.uname }, { following : followingList[i].following }]})
 
-		getUser = await User.getUser( { username  : followingList[i].following } );
+		getUser = await User.getUser( { username : followingList[i].following } );
 
 		if (checkStatusBtn == null) {
 
@@ -208,17 +208,17 @@ exports.getFollowerListPost = async function(req, res) {
  console.log("called...getFollowerListPost")
 	if (req.body.friendUsername == undefined) {
 		followerList = await Follower.getFollowingList (
-								{ following : req.session.uname,  status : true});
+								{ following : req.session.uname, status : true});
 			} else {
 		followerList = await Follower.getFollowingList (
-								{ following : req.body.friendUsername,  status : true});
+								{ following : req.body.friendUsername, status : true});
 	}
 
 	for (let i = followerList.length-1 ; i >= 0 ; i--) {
 
 		checkStatusBtn = await Follower.checkFollow(
 						{ $and : [{	username : req.session.uname }, { following : followerList[i].username }]})
-		getUser = await User.getUser( { username  : followerList[i].username } );
+		getUser = await User.getUser( { username : followerList[i].username } );
 
 		if (checkStatusBtn == null) {
 

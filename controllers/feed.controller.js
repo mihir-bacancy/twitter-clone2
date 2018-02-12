@@ -33,11 +33,11 @@ exports.likePost = async function(req, res) {
 	let likeTweet = await Feed.like(
 			{
 				_id : _id
-			} ,
+			},
 			{
 				 $push :
 				{
-					 likes : {liker: liker,  status: 'liked'}
+					 likes : {liker: liker, status: 'liked'}
 				}
 			}
 
@@ -58,7 +58,7 @@ exports.unLikePost = async function(req, res) {
 	let unLikeTweet = await Feed.unLike(
 			{
 				_id : _id
-			} ,
+			},
 			{
 				$pull :
 				{
@@ -78,7 +78,7 @@ exports.unLikePost = async function(req, res) {
 
 
 exports.editTweetPost = async function(req, res){
-	console.log("   >>    >>>>>>>>>>>>>>>>>>>", req.body);
+	console.log("  >>  >>>>>>>>>>>>>>>>>>>", req.body);
 	 let editTweet = await Feed.updateTweet({_id : req.body.id}, {$set : { tweet : req.body.EditedTweet }})
 	 console.log("<><><><><>	", editTweet);
 	 let getupdatedTweet = await Feed.getTweet({_id:req.body.id});
