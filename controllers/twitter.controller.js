@@ -1,5 +1,6 @@
 const User   = require('../models/users.models');
 const Follow   = require('../models/users.models');
+const Follower   = require('../models/follow.models');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -33,6 +34,12 @@ exports.registerPost = async function (req,res) {
     img : "/images/defaultprofile.png"
   });
 
+  let newFollower = new Follower({
+        username: name,
+        following: name,
+        status: true,
+      });
+
   let checkUser = await User.getUser(
     {
       $or :
@@ -49,15 +56,26 @@ exports.registerPost = async function (req,res) {
   if (checkUser) {
     res.render('register');
   } else {
-    let user = User.createUser(newUser,function(err,userInfo) {
+    let user = User.createUser(newUser, async function(err,userInfo) {
 
       if (err) {
         console.log(err)
       }
 
+      let followInsert = await Follower.follow(newFollower,function(err,userInfo) {
+        if (err) {
+          console.log(err);
+        }
+        if (userInfo) {
+          status = "follow";
+        }
+      });
+
       if (userInfo) {
+
         res.render('login');
       }
+
 
     })
   }

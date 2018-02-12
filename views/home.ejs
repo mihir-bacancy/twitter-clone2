@@ -18,14 +18,14 @@
 
 								<a href="" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= getUserProfileCard.username %></a>
 							</div>
-								<a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
+								<a title="Mert Salih Kaplan" href="/showProfile"
 										class="twPc-avatarLink">
 									<img alt="Mert Salih Kaplan" src="<%= getUserProfileCard.img %>" class="twPc-avatarImg">
 								</a>
 
 								<div class="twPc-divUser">
 									<div class="twPc-divName">
-											<a href="https://twitter.com/sathwara_mihir"><%= getUserProfileCard.name %></a>
+											<a href="/showProfile"><%= getUserProfileCard.name %></a>
 									</div>
 									<span>
 									<a href="https://twitter.com/mertskaplan">@<span><%= getUserProfileCard.username %></span></a>
@@ -44,14 +44,14 @@
 							<li class="twPc-ArrangeSizeFit">
 								<a href="" title="885 Following">
 									<span class="twPc-StatLabel twPc-block">Following</span>
-									<span class="twPc-StatValue"><%= followingcount %></span>
+									<span class="twPc-StatValue"><%= followingcount-1 %></span>
 								</a>
 							</li>
 
 							<li class="twPc-ArrangeSizeFit">
 								<a href="" title="1.810 Followers">
 									<span class="twPc-StatLabel twPc-block">Followers</span>
-									<span class="twPc-StatValue"><%= followercount %></span>
+									<span class="twPc-StatValue"><%= followercount-1 %></span>
 								</a>
 							</li>
 						</ul>
@@ -91,7 +91,7 @@
 								<div class="col-md-10">
 									<div class="row">
 										<div class="col-md-11  col-sm-11 col-xs-11">
-											<strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %><%= tweet[i]._id %>&nbsp;&nbsp;&nbsp;  <%=  tweet[i].date %>
+											<strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %>&nbsp;&nbsp;&nbsp;  <%=  tweet[i].date %>
 										</div>
 
 										<!-- start Pop-up For Tweet Editing -->
@@ -185,9 +185,13 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script type="text/javascript" src="javascript/myModal.js">
 
 </script>
+
+<script type="text/javascript" src="javascript/myModal.js"></script>
+
 <script type="text/javascript" src="javascript/editTweet.js"></script>
 <script type="text/javascript" src="javascript/createTweet.js"></script>
 <script type="text/javascript" src="javascript/like.js"> </script>

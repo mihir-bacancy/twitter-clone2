@@ -16,14 +16,14 @@
 							<a href="" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= checkUser.username %></a>
 						</div>
 
-						<a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
+						<a title="Mert Salih Kaplan" href="/showProfile"
 							class="twPc-avatarLink">
 							<img alt="Mert Salih Kaplan" src="<%= checkUser.img %>" class="twPc-avatarImg" style="height: 150px;width: 150px">
 						</a>
 
 						<div class="twPc-divUser">
 							<div class="twPc-divName">
-								<a href="https://twitter.com/sathwara_mihir""><%= checkUser.name %></a>
+								<a href="/showProfile""><%= checkUser.name %></a>
 								 <input type="hidden" value="<%= username %>" id="username" name="username">
 									<input type="hidden" value="<%= checkUser.username %>" id="friendUsername" name="friendUsername">
 									 <%if (status == "follow") { %>
@@ -49,14 +49,14 @@
 
 								<li class="twPc-ArrangeSizeFit">
 									<button id="followingcount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">  <span class="twPc-StatLabel twPc-block">Following</span>
-										<span class="twPc-StatValue"><%= followingcount %></span>
+										<span class="twPc-StatValue"><%= followingcount-1 %></span>
 									</button>
 								</li>
 
 								<li class="twPc-ArrangeSizeFit">
 									<button id="followercount" class="btn btn-link" style="background-color: #fff;border-color: #fff" title="885 Following">
 										<span class="twPc-StatLabel twPc-block">Followers</span>
-										<span class="twPc-StatValue"><%= followercount %></span>
+										<span class="twPc-StatValue"><%= followercount-1 %></span>
 										</button>
 
 								</li>
@@ -70,10 +70,65 @@
 			<h5><b> Username : </b><%= checkUser.username %></h5>
 			<input type="hidden" name="friendUsername" id="friendUsername">
 		</div>
-		<div class="col-md-6" id="followingA" style="word-break:break-all;">
-
-
+		<div class="col-md-9" id="followingA" style="word-break:break-all;">
 		</div>
+		<div class="col-md-6" id="tweetAreaHome" style="word-break:break-all;list-style-type: none;">
+      <% for(let i = getFriendTweets.length-1;i >= 0 ; i--) {%>
+
+              <div class="well twtdiv row" style="margin-bottom: -18px;background-color: #ffffff;">
+                <div class="col-md-2">
+                  <img src="<%= checkUser.img %>" class="img-circle" alt="Cinque Terre" width="48" height="48">
+                </div>
+                <% let flag %>
+                <div class="col-md-10">
+                  <div class="row">
+                    <div class="col-md-11  col-sm-11 col-xs-11">
+                      <strong style="font-size: 17px"><%= checkUser.name %></strong>&nbsp;@<%= checkUser.username %>&nbsp;&nbsp;&nbsp;  <%=  getFriendTweets[i].date %>
+                    </div>
+
+                    <!-- start Pop-up For Tweet Editing -->
+
+
+
+                    <!-- END Pop-up For Tweet Editing -->
+
+
+                  </div>
+                  <!-- <a href="#myModal" class="btn btn-lg btn-primary" data-toggle="modal">Launch Demo Modal</a> -->
+                <p id="tweet<%= getFriendTweets[i]._id %>"><%= getFriendTweets[i].tweet %></p>
+                   <%  for (let j = getFriendTweets[i].likes.length-1 ; j>=0 ; j--  ){ %>
+                    <% if (checkUser.username == getFriendTweets[i].likes[j].liker) {
+                      flag = true;
+                      break;
+                     } else {
+                      flag = false;
+                     }  %>
+                  <%} %>
+                  <div class="row" id="likeParent" style="margin-bottom: 0px;">
+                     <% if (flag == true) { %>
+                        <div class="col-md-1 col-sm-1 col-xs-1">
+                          <input type="image" class="unlike" src="images/twitterunLike.png"
+                          onclick="unlike(this)" id="<%= getFriendTweets[i]._id %>" style="height: 20px;width: 20px;"
+                          name="<%=getFriendTweets[i].likes.length%>">
+                        </div>
+                        <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 1px">
+                          <p id="cnt<%= getFriendTweets[i]._id %>" value="q"><%=getFriendTweets[i].likes.length%></p>
+                        </div>
+                     <% } else { %>
+                        <div class="col-md-1 col-sm-1 col-xs-1">
+                           <input type="image" class="like"  src="images/twitterLike.png"
+                           onclick="like(this)" id="<%= getFriendTweets[i]._id %>" style="height: 20px;width: 20px;"
+                           name="<%=getFriendTweets[i].likes.length%>">
+                        </div>
+                        <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 1px">
+                          <p id="cnt<%= getFriendTweets[i]._id %>" value="q"><%=getFriendTweets[i].likes.length%></p>
+                        </div>
+                     <% } %>
+                </div>
+              </div>
+              </div>
+            <% } %>
+    </div>
 		<!-- <div class="col-md-3 well"></div> -->
 	</div>
 
@@ -87,12 +142,12 @@
 		<script type="text/javascript">
 		$("#follow").click(function() {
 				let myUsername = document.getElementById('username').value;
-				console.log("myUsername",myUsername);
+				console.log("myUsername", myUsername);
 				let friendUsername = document.getElementById('friendUsername').value;
 					$.ajax({
 								method: "POST",
 								url: "/follow",
-								data: {myUsername : myUsername,friendUsername : friendUsername}
+								data: {myUsername : myUsername, friendUsername : friendUsername}
 							})
 							.done(function( msg ) {
 								location.reload()
@@ -107,7 +162,7 @@
 				$.ajax({
 							method: "POST",
 							url: "/unfollow",
-							data: {myUsername : myUsername,friendUsername : friendUsername}
+							data: {myUsername : myUsername, friendUsername : friendUsername}
 						})
 						.done(function( msg ) {
 							location.reload()
@@ -115,67 +170,28 @@
 		});
 		</script>
 
-		<script type="text/javascript">
+<script type="text/javascript">
 	 $("#tweet").click(function() {
-		$( "#followingA" ).empty();
-		let friendUsername = document.getElementById("friendUsername").value;
-			$.ajax({
-				method: "POST",
-				url: "/getFriendTweets",
-				data : { friendUsername : friendUsername }
-			})
-			.done(function( data ) {
-				console.log("===",data)
-				for(let i = data.length-1 ; i>=0 ; i--) {
-					// console.log("m"+data[i].following);
-					$("#followingA")
-					.prepend('<div class="well" style="background-color:#ffffff"><img src="<%=  checkUser.img %>" class="img-circle" style="word-break:break-all;" width="48" height="48" /><b><%=  checkUser.name %> </b><br/>'+data[i].tweet+'</div>');
-				}
-			});
+	 	$( "#followingA" ).hide();
+	 	$( "#tweetAreaHome" ).show();
+		// $( "#tweetArea" ).empty();
+
 	 });
+</script>
+<script type="text/javascript" src="javascript/followinglist4frnd.js"> </script>
+
+<script type="text/javascript" src="javascript/followerlist4frnd.js">
+
 </script>
 
-<script type="text/javascript">
-	 $("#followingcount").click(function() {
-		$( "#followingA" ).empty();
-		let friendUsername = document.getElementById('friendUsername').value;
-			$.ajax({
-				method: "POST",
-				url: "/following",
-				data : { friendUsername : friendUsername }
-			})
-			.done(function( data ) {
-				console.log("===",data)
-				for(let i = data.length-1 ; i>=0 ; i--) {
-					console.log("m"+data[i].following);
-					$("#followingA")
-					.prepend('<div class="well"><a href="/showFriendProfile?id='
-						+data[i].following+'">'+data[i].following+'</a></div>');
-				}
-			});
-	 });
-</script>
-<script type="text/javascript">
-	 $("#followercount").click(function() {
-		$( "#followingA" ).empty();
-		let friendUsername = document.getElementById('friendUsername').value;
-		// $( "#following" ).load( "p.ejs" );
-			$.ajax({
-				method: "POST",
-				url: "/follower",
-				data : { friendUsername : friendUsername }
-			})
-			.done(function( data ) {
-				console.log("===",data)
-				for(let i = data.length-1 ; i>=0 ; i--) {
-					console.log("m"+data[i].following);
-					$("#followingA")
-					.prepend('<div class="well"><a href="/showFriendProfile?id='
-						+data[i].username+'">'+data[i].username+'</a></div>');
-				}
-			});
-	 });
-</script>
+
+<script type="text/javascript" src="javascript/followfn.js"></script>
+<script type="text/javascript"  src="javascript/unfollowfn.js"></script>
+<script type="text/javascript" src="javascript/like.js"> </script>
+<script type="text/javascript" src="javascript/unlike.js"></script>
+<script type="text/javascript" src="javascript/editTweet.js"></script>
+<script type="text/javascript" src="javascript/myModal.js"></script>
+
 </body>
 </html>
 

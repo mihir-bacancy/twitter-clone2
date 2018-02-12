@@ -45,11 +45,11 @@ var UserSchema = mongoose.Schema({
   },
 });
 
-var User = module.exports = mongoose.model('users', UserSchema);
+var User = module.exports = mongoose.model('users',  UserSchema);
 
-module.exports.createUser = function(newUser, callback) {
-  bcrypt.genSalt(10, function(err, salt) {
-    return bcrypt.hash(newUser.password, salt, function(err, hash) {
+module.exports.createUser = function(newUser,  callback) {
+  bcrypt.genSalt(10,  function(err,  salt) {
+    return bcrypt.hash(newUser.password,  salt,  function(err,  hash) {
       newUser.password = hash;
       newUser.save(callback);
     });
@@ -57,8 +57,8 @@ module.exports.createUser = function(newUser, callback) {
 }
 
 module.exports.getUser = function(query) {
-  return new Promise((resolve, reject) => {
-    User.findOne(query, function(err ,data) {
+  return new Promise((resolve,  reject) => {
+    User.findOne(query,  function(err , data) {
       if (err) {
         reject(err);
       }
@@ -67,9 +67,9 @@ module.exports.getUser = function(query) {
   })
 }
 
-module.exports.updateUser = function(query,condition) {
-  return new Promise((resolve, reject) => {
-    User.update(query,condition,function(err ,data) {
+module.exports.updateUser = function(query, condition) {
+  return new Promise((resolve,  reject) => {
+    User.update(query, condition, function(err , data) {
       if (err) {
         reject(err);
       }
@@ -79,16 +79,16 @@ module.exports.updateUser = function(query,condition) {
   })
 }
 
-module.exports.updateProfile = function(query, name, img, pw, email) {
-  return new Promise((resolve, reject) => {
+module.exports.updateProfile = function(query,  name,  img,  pw,  email) {
+  return new Promise((resolve,  reject) => {
 
-    User.update(query, {
+    User.update(query,  {
      $set :
      {  name : name,
         img : img,
         email : email
       }
-    }, function(err ,data) {
+    },  function(err , data) {
       if (err) {
         reject(err);
       }
@@ -99,8 +99,8 @@ module.exports.updateProfile = function(query, name, img, pw, email) {
 
 module.exports.searchUser = function(query) {
   console.log(query);
-  return new Promise((resolve, reject) => {
-    User.find(query, function(err ,data) {
+  return new Promise((resolve,  reject) => {
+    User.find(query,  function(err , data) {
       if (err) {
         reject(err);
       }
@@ -109,7 +109,7 @@ module.exports.searchUser = function(query) {
   })
 }
 
-module.exports.follow = function(newUser, callback) {
+module.exports.follow = function(newUser,  callback) {
 
   newUser.save(function (err) {
     if (err) return handleError(err);

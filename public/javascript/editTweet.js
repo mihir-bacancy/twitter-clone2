@@ -4,7 +4,7 @@
       $.ajax({
         method: "POST",
         url: "/editTweet",
-        data: {EditedTweet : EditedTweet,id : id}
+        data: {EditedTweet : EditedTweet, id : id}
       })
       .done(function( data ) {
         console.log(data[0].tweet)

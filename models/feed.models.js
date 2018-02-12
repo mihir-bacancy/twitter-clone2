@@ -32,22 +32,22 @@ let feedSchema = mongoose.Schema({
       return new Date();
     },
   },
-  likes: [ { liker : String,status : String } ]
+  likes: [ { liker : String, status : String } ]
 });
 
-var Feed = module.exports = mongoose.model('feed', feedSchema);
+var Feed = module.exports = mongoose.model('feed',  feedSchema);
 
 //Create Tweet
-module.exports.createTweet = function(newTweet, callback) {
+module.exports.createTweet = function(newTweet,  callback) {
     newTweet.save(callback);
   }
 
 // Fetch Tweets from db
 module.exports.getTweet = function(query) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve,  reject) => {
 
 
-    Feed.find(query, function(err ,data) {
+    Feed.find(query,  function(err , data) {
       if (err) {
         reject(err);
       }
@@ -59,8 +59,8 @@ module.exports.getTweet = function(query) {
 // Calculate Number of tweet
 module.exports.getTweetCount = function(user) {
   // console.log(user);
-  return new Promise((resolve, reject) => {
-  Feed.count(user, function(err ,data) {
+  return new Promise((resolve,  reject) => {
+  Feed.count(user,  function(err , data) {
     if (err) {
       reject(err);
     }
@@ -70,10 +70,10 @@ module.exports.getTweetCount = function(user) {
 }
 
 //Add Likes to db
-module.exports.like = function(query,condition) {
+module.exports.like = function(query, condition) {
 
-  return new Promise((resolve, reject) => {
-    Feed.update(query,condition,function(err ,data) {
+  return new Promise((resolve,  reject) => {
+    Feed.update(query, condition, function(err , data) {
       if (err) {
         reject(err);
       }
@@ -85,9 +85,9 @@ module.exports.like = function(query,condition) {
   })
 }
 
-module.exports.unLike = function(query,condition) {
-  return new Promise((resolve, reject) => {
-    Feed.update(query,condition,function(err ,data) {
+module.exports.unLike = function(query, condition) {
+  return new Promise((resolve,  reject) => {
+    Feed.update(query, condition, function(err , data) {
       if (err) {
         reject(err);
       }
@@ -99,8 +99,8 @@ module.exports.unLike = function(query,condition) {
 
 
 module.exports.getLiker = function(id) {
-  return new Promise((resolve, reject) => {
-  Feed.findOne(id, function(err ,data) {
+  return new Promise((resolve,  reject) => {
+  Feed.findOne(id,  function(err , data) {
     if (err) {
       reject(err);
     }
@@ -109,9 +109,9 @@ module.exports.getLiker = function(id) {
   })
 }
 
-module.exports.updateTweet = function(query,condition) {
-  return new Promise((resolve, reject) => {
-    Feed.update(query,condition,function(err ,data) {
+module.exports.updateTweet = function(query, condition) {
+  return new Promise((resolve,  reject) => {
+    Feed.update(query, condition, function(err , data) {
       if (err) {
         reject(err);
       }
