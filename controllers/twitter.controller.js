@@ -1,11 +1,11 @@
 const User = require('../models/users.models')
-const Follow = require('../models/users.models')
+// const Follow = require('../models/users.models')
 const Follower = require('../models/follow.models')
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-var cookie = require('cookie')
-var session = require('express-session')
+// var cookie = require('cookie')
+// var session = require('express-session')
 
 let TempMail
 let TempUser
@@ -23,7 +23,7 @@ exports.registerPost = async function (req, res) {
   let name = req.body.name
   let email = req.body.email
   let pw = req.body.pw
-  let img = '/images/defaultprofile.png'
+  // let img = '/images/defaultprofile.png'
 
   let newUser = new User({
     name: name,
@@ -63,9 +63,6 @@ exports.registerPost = async function (req, res) {
       let followInsert = await Follower.follow(newFollower, function (err, userInfo) {
         if (err) {
           console.log(err)
-        }
-        if (userInfo) {
-          status = 'follow'
         }
       })
 

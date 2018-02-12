@@ -1,14 +1,5 @@
 const mongoose = require('mongoose')
 
-let likeSchema = mongoose.Schema({
-  liker: {
-    type: String
-  },
-  status: {
-    type: String
-  }
-})
-
 let feedSchema = mongoose.Schema({
   username: {
     type: String

@@ -107,11 +107,11 @@ module.exports.searchUser = function (query) {
   })
 }
 
-module.exports.follow = function (newUser, callback) {
-  newUser.save(function (err) {
-    if (err) return handleError(err)
-    follwer.save(function (err) {
-      if (err) return handleError(err)
-    })
-  })
-}
+// module.exports.follow = function (newUser, callback) {
+//   newUser.save(function (err) {
+//     if (err) return handleError(err)
+//     follwer.save(function (err) {
+//       if (err) return handleError(err)
+//     })
+//   })
+// }

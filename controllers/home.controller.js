@@ -1,10 +1,10 @@
 const User = require('../models/users.models')
-const session = require('express-session')
+// const session = require('express-session')
 const Feed = require('../models/feed.models')
 const Follower = require('../models/follow.models')
 const following = require('../models/users.models')
 
-const fs = require('fs')
+// const fs = require('fs')
 
 exports.homeGet = async function (req, res) {
   let followingList = await Follower.getFollowingList(
@@ -56,24 +56,24 @@ exports.homeGet = async function (req, res) {
 
 // Show Your own Profile
 exports.showProfileGet = async function (req, res) {
-	 let checkUser = await User.getUser({ username: req.session.uname })
+	let checkUser = await User.getUser({ username: req.session.uname })
 
-	 let followercount = await Follower.getFollowersCount(
+	let followercount = await Follower.getFollowersCount(
     { following: req.session.uname, status: true})
-	 let followingcount = await Follower.getFollowersCount(
+	let followingcount = await Follower.getFollowersCount(
     { username: req.session.uname, status: true})
-	 let getTweets = await Feed.getTweet(
+	let getTweets = await Feed.getTweet(
     {username: req.session.uname})
-	 let getTweetCount = await Feed.getTweetCount(
+	let getTweetCount = await Feed.getTweetCount(
     {username: req.session.uname})
 	 // console.log(">>>>>>>>>>..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", getTweets);
-	 for (let count = getTweets.length - 1; count >= 0; count--) {
-    dateTemp = formatDate(getTweets[count].createdAt)
+	for (let count = getTweets.length - 1; count >= 0; count--) {
+  	dateTemp = formatDate(getTweets[count].createdAt)
     getTweets[count].date = dateTemp
   }
 
   //
-	 res.render('showProfile',
+	res.render('showProfile',
     { checkUser: checkUser,
       followercount: followercount,
       followingcount: followingcount,
@@ -84,10 +84,10 @@ exports.showProfileGet = async function (req, res) {
 
 // Render on edit profile
 exports.profileGet = async function (req, res) {
-	 let checkUser = await User.getUser({
-		 username: req.session.uname
+	let checkUser = await User.getUser({
+		username: req.session.uname
   })
-	 res.render('editprofile', { checkUser: checkUser})
+	res.render('editprofile', { checkUser: checkUser})
 }
 
 // submit and save edited profile
@@ -126,7 +126,7 @@ function formatDate (dateFrom) {
     day = d.getDate(),
     year = d.getFullYear(),
     hrs = d.getHours(),
-			 min = d.getMinutes()
+		min = d.getMinutes()
 
   let date = day + ' ' + month + ' ' + year + '  ' + hrs + ':' + min
   return date

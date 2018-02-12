@@ -1,5 +1,5 @@
 const User = require('../models/users.models')
-const fs = require('fs')
+// const fs = require('fs')
 const Follower = require('../models/follow.models')
 const Feed = require('../models/feed.models')
 
@@ -9,10 +9,10 @@ exports.searchFriendGet = function (req, res) {
 
 // Search User to follow
 exports.searchFriendPost = async function (req, res) {
-  Query = req.body.search
+  let Query = req.body.search
   // { $regex: '\Query.*'} }
   let users = await User.searchUser({ name: { $regex: '.*' + Query + '.*'} })
-  console.log('>>	', users)
+  console.log('>>', users)
   if (users) {
     res.send(users)
   } else {
@@ -25,16 +25,15 @@ exports.showFriendProfileGet = async function (req, res) {
   let friendUsername = req.query.id
   let status = 'follow'
 
-	 if (friendUsername != null) {
+  if (friendUsername != null) {
     friendUsername = friendUsername.replace("\'", '')
     friendUsername = friendUsername.replace("\'", '')
-	 }
+  }
 
-	 if (friendUsername == req.session.uname) {
-	 	res.redirect('/showProfile')
-	 }
-
-	 let checkFollowStatus = await Follower.checkFollow(
+  if (friendUsername == req.session.uname) {
+    res.redirect('/showProfile')
+  }
+  let checkFollowStatus = await Follower.checkFollow(
     {
       $and:
 			[
@@ -79,8 +78,8 @@ exports.showFriendProfileGet = async function (req, res) {
   ({ following: friendUsername, status: true})
 
 	 let followingcount = await Follower.getFollowersCount
-	 							({ username: friendUsername, status: true})
- 	let getTweetCount = await Feed.getTweetCount({username: friendUsername})
+  ({ username: friendUsername, status: true})
+  let getTweetCount = await Feed.getTweetCount({username: friendUsername})
 
   res.render('showFriendProfile', {
     checkUser: checkUser,
