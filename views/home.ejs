@@ -35,23 +35,23 @@
 					<div class="twPc-divStats">
 						<ul class="twPc-Arrange">
 							<li class="twPc-ArrangeSizeFit">
-								<a href="" title="9.840 Tweet">
+								<a href="" title="<%= getTweetCount %> Tweets">
 									<span class="twPc-StatLabel twPc-block">Tweets</span>
 									<span class="twPc-StatValue"><%= getTweetCount %></span>
 								</a>
 							</li>
 
 							<li class="twPc-ArrangeSizeFit">
-								<a href="" title="885 Following">
+								<a href="" title="<%= followingcount-1 %> Following">
 									<span class="twPc-StatLabel twPc-block">Following</span>
-									<span class="twPc-StatValue"><%= followingcount-1 %></span>
+									<span class="twPc-StatValue"><%= followingcount-1 %> </span>
 								</a>
 							</li>
 
 							<li class="twPc-ArrangeSizeFit">
-								<a href="" title="1.810 Followers">
+								<a href="" title="<%= followercount-1 %> Followers">
 									<span class="twPc-StatLabel twPc-block">Followers</span>
-									<span class="twPc-StatValue"><%= followercount-1 %></span>
+									<span class="twPc-StatValue"><%= followercount-1 %> </span>
 								</a>
 							</li>
 						</ul>
@@ -196,6 +196,16 @@
 <script type="text/javascript" src="javascript/createTweet.js"></script>
 <script type="text/javascript" src="javascript/like.js"> </script>
 <script type="text/javascript" src="javascript/unlike.js"></script>
+<script type="text/javascript">
+let $button = $("#Tweet");
+$button.prop("disabled", true);
+
+$("#tweetArea").blur(function(){
+	console.log(">>");
+  $button.prop("disabled", (this.value === "")? true : false);
+});
+
+</script>
 
 </body>
 </html>

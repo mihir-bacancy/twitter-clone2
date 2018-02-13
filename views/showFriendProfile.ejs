@@ -129,7 +129,7 @@
        </div>
       <% } %>
   </div>
-		<!-- <div class="col-md-3 well"></div> -->
+
 	</div>
 
 
@@ -140,19 +140,19 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 		<script type="text/javascript">
-		$("#follow").click(function() {
-				let myUsername = document.getElementById('username').value;
-				console.log("myUsername", myUsername);
-				let friendUsername = document.getElementById('friendUsername').value;
-					$.ajax({
-								method: "POST",
-								url: "/follow",
-								data: {myUsername : myUsername, friendUsername : friendUsername}
-							})
-							.done(function( msg ) {
-								location.reload()
-							});
-			});
+			$("#follow").click(function() {
+					let myUsername = document.getElementById('username').value;
+					console.log("myUsername", myUsername);
+					let friendUsername = document.getElementById('friendUsername').value;
+						$.ajax({
+									method: "POST",
+									url: "/follow",
+									data: {myUsername : myUsername, friendUsername : friendUsername}
+								})
+								.done(function( msg ) {
+									location.reload()
+								});
+				});
 		</script>
 		<script type="text/javascript">
 			$("#unfollow").click(function() {
@@ -179,12 +179,8 @@
 	 });
 </script>
 <script type="text/javascript" src="javascript/followinglist4frnd.js"> </script>
-
 <script type="text/javascript" src="javascript/followerlist4frnd.js">
-
 </script>
-
-
 <script type="text/javascript" src="javascript/followfn.js"></script>
 <script type="text/javascript" src="javascript/unfollowfn.js"></script>
 <script type="text/javascript" src="javascript/like.js"> </script>

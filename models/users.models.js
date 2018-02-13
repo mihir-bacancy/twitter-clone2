@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-var bcrypt = require('bcrypt')
+const mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 
 var UserSchema = mongoose.Schema({
   name: {
@@ -26,7 +26,7 @@ var UserSchema = mongoose.Schema({
   createdAt: {
     type: Date,
     default: function () {
-      return new Date()
+      return new Date();
     }
   },
   deletedAt: {
@@ -36,47 +36,47 @@ var UserSchema = mongoose.Schema({
   updatedAt: {
     type: Date,
     default: function () {
-      return new Date()
+      return new Date();
     }
   },
   updatedBy: {
     type: String,
     ref: 'User'
   }
-})
+});
 
-var User = module.exports = mongoose.model('users', UserSchema)
+var User = module.exports = mongoose.model('users', UserSchema);
 
 module.exports.createUser = function (newUser, callback) {
   bcrypt.genSalt(10, function (err, salt) {
     return bcrypt.hash(newUser.password, salt, function (err, hash) {
-      newUser.password = hash
-      newUser.save(callback)
-    })
-  })
-}
+      newUser.password = hash;
+      newUser.save(callback);
+    });
+  });
+};
 
 module.exports.getUser = function (query) {
   return new Promise((resolve, reject) => {
     User.findOne(query, function (err, data) {
       if (err) {
-        reject(err)
+        reject(err);
       }
-      resolve(data)
-    })
-  })
-}
+      resolve(data);
+    });
+  });
+};
 
 module.exports.updateUser = function (query, condition) {
   return new Promise((resolve, reject) => {
     User.update(query, condition, function (err, data) {
       if (err) {
-        reject(err)
+        reject(err);
       }
-      resolve(data)
-    })
-  })
-}
+      resolve(data);
+    });
+  });
+};
 
 module.exports.updateProfile = function (query, name, img, pw, email) {
   return new Promise((resolve, reject) => {
@@ -88,24 +88,24 @@ module.exports.updateProfile = function (query, name, img, pw, email) {
    }
     }, function (err, data) {
       if (err) {
-        reject(err)
+        reject(err);
       }
-      resolve(data)
-    })
-  })
-}
+      resolve(data);
+    });
+  });
+};
 
 module.exports.searchUser = function (query) {
-  console.log(query)
+  console.log(query);
   return new Promise((resolve, reject) => {
     User.find(query, function (err, data) {
       if (err) {
-        reject(err)
+        reject(err);
       }
-      resolve(data)
-    })
-  })
-}
+      resolve(data);
+    });
+  });
+};
 
 // module.exports.follow = function (newUser, callback) {
 //   newUser.save(function (err) {
