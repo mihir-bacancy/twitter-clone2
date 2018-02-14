@@ -42,7 +42,11 @@ var UserSchema = mongoose.Schema({
   updatedBy: {
     type: String,
     ref: 'User'
-  }
+  },
+  status: {
+    type: Boolean,
+    required: true
+  },
 });
 
 var User = module.exports = mongoose.model('users', UserSchema);
@@ -96,7 +100,6 @@ module.exports.updateProfile = function (query, name, img, pw, email) {
 };
 
 module.exports.searchUser = function (query) {
-  console.log(query);
   return new Promise((resolve, reject) => {
     User.find(query, function (err, data) {
       if (err) {
@@ -106,12 +109,3 @@ module.exports.searchUser = function (query) {
     });
   });
 };
-
-// module.exports.follow = function (newUser, callback) {
-//   newUser.save(function (err) {
-//     if (err) return handleError(err)
-//     follwer.save(function (err) {
-//       if (err) return handleError(err)
-//     })
-//   })
-// }

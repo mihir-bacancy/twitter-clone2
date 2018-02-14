@@ -142,7 +142,6 @@
 		<script type="text/javascript">
 			$("#follow").click(function() {
 					let myUsername = document.getElementById('username').value;
-					console.log("myUsername", myUsername);
 					let friendUsername = document.getElementById('friendUsername').value;
 						$.ajax({
 									method: "POST",
@@ -165,7 +164,8 @@
 							data: {myUsername : myUsername, friendUsername : friendUsername}
 						})
 						.done(function( msg ) {
-							location.reload()
+							 %>(">>>",msg);
+							location.reload();
 						});
 		});
 		</script>
@@ -174,7 +174,6 @@
 	 $("#tweet").click(function() {
 	 	$( "#followingA" ).hide();
 	 	$( "#tweetAreaHome" ).show();
-		// $( "#tweetArea" ).empty();
 
 	 });
 </script>

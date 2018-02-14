@@ -3,6 +3,9 @@ const Feed = require('../models/feed.models');
 const Follower = require('../models/follow.models');
 const following = require('../models/users.models');
 
+//Get Details like following list,follower list,follower count,following count
+// tweet count,profile card following user tweet like unlike status and sort tweet by date
+// and time
 exports.homeGet = async function (req, res) {
   let followingList = await Follower.getFollowingList(
     { username: req.session.uname, status: true});
@@ -53,7 +56,6 @@ exports.homeGet = async function (req, res) {
 // Show Your own Profile
 exports.showProfileGet = async function (req, res) {
   let checkUser = await User.getUser({ username: req.session.uname });
-
   let followercount = await Follower.getFollowersCount(
     { following: req.session.uname, status: true});
   let followingcount = await Follower.getFollowersCount(
@@ -62,13 +64,12 @@ exports.showProfileGet = async function (req, res) {
     {username: req.session.uname});
   let getTweetCount = await Feed.getTweetCount(
     {username: req.session.uname});
-	 // console.log(">>>>>>>>>>..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", getTweets);
+
   for (let count = getTweets.length - 1; count >= 0; count--) {
   	dateTemp = formatDate(getTweets[count].createdAt);
     getTweets[count].date = dateTemp;
   }
 
-  //
   res.render('showProfile',
     { checkUser: checkUser,
       followercount: followercount,
@@ -94,7 +95,6 @@ exports.profilePost = async function (req, res) {
   let img;
 
   let checkUser = await User.getUser({ email: email });
-  console.log('img', checkUser.img);
   if (req.files.length == 0) {
     img = checkUser.img;
     let updatePro = await User.updateProfile(
@@ -108,7 +108,6 @@ exports.profilePost = async function (req, res) {
         username: req.session.uname
       }, name, img, pw, email);
   }
-
   res.redirect('/showProfile');
 };
 

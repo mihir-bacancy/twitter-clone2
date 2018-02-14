@@ -32,7 +32,7 @@
         <div id="navbarCollapse" class="collapse navbar-collapse" style="background-color: #ffffff;">
 
           <a href="/home"><img clas="center-block" style="align-self: center;" src="twitterlogo.png" class="twitterlogo"  /></a>
-            <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left" method="post" action="/searchFriend">
               <div class="input-group">
                     <input type="text" class="form-control search" placeholder="Search friends" name="search" id="search">
                     <ul class="dropdown-menu form-control scrollable-menu" style="position: absolute;" id="searchResult">
@@ -40,7 +40,7 @@
                     </ul>
 
                     <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default btn-post"><span class="glyphicon glyphicon-search"></span></button>
+                        <button type="submit" id="searchbtn" class="btn btn-default btn-post"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
             </form>
@@ -49,7 +49,7 @@
 
                 <ul class="nav navbar-nav">
                 <li class="active"><a href="/home">Home</a></li>
-                <li class="active"><a href="/searchFriend">search friend</a></li>
+                <!-- <li class="active"><a href="/searchFriend">search friend</a></li> -->
                 <li class="dropdown" >
                     <a data-toggle="dropdown" class="dropdown-toggle">Profile <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -78,31 +78,24 @@ $(document).ready(function(){
   $("#search").focusin(function(){
     $("#search").keyup(function(){
       $("#searchResult").show();
-      console.log("==")
       $("#searchResult").empty();
       let query = document.getElementById('search').value;
-        console.log("search",query);
-        console.log("SearchFriend.ejs  jquery >>>>>");
+      let checkbtn = $("#searchbtn").attr("id");
+      // console?.log(">>>",btn)
           $.ajax({
               method: "POST",
               url: "/searchFriend",
-                data: {search : query}
+                data: {search : query,checkbtn: checkbtn}
           })
           .done(function( msg ) {
-              console.log(">>>>", msg);
               for (var i=0; i<msg.length; i++) {
-                  console.log(msg[i]["username"]);
                   $("#searchResult").append('<li><a href="/showFriendProfile?id='+msg[i]["username"]+'">'+msg[i]["username"]+'</a></li>');
               }
         });
     })
   });
-
 </script>
 
-<script type="text/javascript">
-	// $zzz
-</script>
 
 
 

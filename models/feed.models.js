@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// schema for Tweets
 let feedSchema = mongoose.Schema({
   username: {
     type: String
@@ -47,7 +48,6 @@ module.exports.getTweet = function (query) {
 
 // Calculate Number of tweet
 module.exports.getTweetCount = function (user) {
-  // console.log(user);
   return new Promise((resolve, reject) => {
     Feed.count(user, function (err, data) {
       if (err) {
@@ -83,6 +83,7 @@ module.exports.unLike = function (query, condition) {
   });
 };
 
+//
 module.exports.getLiker = function (id) {
   return new Promise((resolve, reject) => {
     Feed.findOne(id, function (err, data) {
@@ -94,6 +95,7 @@ module.exports.getLiker = function (id) {
   });
 };
 
+//update existing tweet
 module.exports.updateTweet = function (query, condition) {
   return new Promise((resolve, reject) => {
     Feed.update(query, condition, function (err, data) {

@@ -199,11 +199,13 @@
 <script type="text/javascript">
 let $button = $("#Tweet");
 $button.prop("disabled", true);
-
 $("#tweetArea").blur(function(){
-	console.log(">>");
   $button.prop("disabled", (this.value === "")? true : false);
 });
+
+</script>
+
+<script type="text/javascript">
 
 </script>
 

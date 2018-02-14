@@ -9,10 +9,38 @@ exports.searchFriendGet = function (req, res) {
 // Search User to follow
 exports.searchFriendPost = async function (req, res) {
   let Query = req.body.search;
+  let status = '';
+  let checkStatusBtn;
+
   let users = await User.searchUser({ name: { $regex: '.*' + Query + '.*'} });
-  console.log('>>', users);
+  // Reverse Check Follow status true or not
+  for (let i = users.length - 1; i >= 0; i--) {
+    checkStatusBtn = await Follower.checkFollow(
+      { $and: [{	username: req.session.uname }, { following: users[i].username }]});
+    getUser = await User.getUser({ username: users[i].username });
+
+    if (checkStatusBtn == null) {
+      status = 'follow';
+    } else {
+      if (checkStatusBtn.status == false) {
+        status = 'follow';
+      } else {
+        status = 'unfollow';
+      }
+    }
+
+    let tempObj = JSON.parse(JSON.stringify(users[i]));
+    tempObj['statusbtn'] = status;
+    users[i] = tempObj;
+    users[i].img = getUser.img;
+  }
+
   if (users) {
-    res.send(users);
+    if (req.body.checkbtn === undefined) {
+      res.render('searchFriend', { users: users });
+    } else {
+      res.send(users);
+    }
   } else {
     res.send('no user found');
   }
@@ -31,6 +59,7 @@ exports.showFriendProfileGet = async function (req, res) {
   if (friendUsername == req.session.uname) {
     res.redirect('/showProfile');
   }
+
   let checkFollowStatus = await Follower.checkFollow(
     {
       $and:
@@ -45,26 +74,13 @@ exports.showFriendProfileGet = async function (req, res) {
     });
 
   if (checkFollowStatus) {
-    if (checkFollowStatus.status === false) {
+    if (checkFollowStatus.status == false) {
       status = 'follow';
     } else {
       status = 'unfollow';
     }
   } else {
-    let newFollower = new Follower({
-      username: req.session.uname,
-      following: friendUsername,
-      status: true
-    });
-
-    let followInsert = await Follower.follow(newFollower, function (err, userInfo) {
-      if (err) {
-        console.log(err);
-      }
-      if (userInfo) {
-        status = 'follow';
-      }
-    });
+    status = 'follow';
   }
 
   let getFriendTweets = await Feed.getTweet({username: friendUsername});
@@ -75,7 +91,7 @@ exports.showFriendProfileGet = async function (req, res) {
   	({ following: friendUsername, status: true});
 
   let followingcount = await Follower.getFollowersCount
-  		({ username: friendUsername, status: true});
+  	({ username: friendUsername, status: true});
   let getTweetCount = await Feed.getTweetCount({username: friendUsername});
 
   res.render('showFriendProfile', {
@@ -93,7 +109,6 @@ exports.showFriendProfileGet = async function (req, res) {
 exports.unfollowPost = async function (req, res) {
   let myUsername = req.session.uname;
   let friendUsername = req.body.friendUsername;
-  console.log('unFollow called');
 
   let newFollower = new Follower({
     username: req.session.uname,
@@ -113,9 +128,8 @@ exports.unfollowPost = async function (req, res) {
   } else {
     let followInsert = await Follower.follow(newFollower, function (err, userInfo) {
       if (err) {
-        console.log(err);
+         console.log(err);
       }
-
       if (userInfo) {
         res.send('unfollowPost');
       }
@@ -128,8 +142,28 @@ exports.followPost = async function (req, res) {
   let myUsername = req.session.uname;
   let friendUsername = req.body.friendUsername;
 
-  let unfollowFriend = await Follower.updateFollow({$and: [{username: myUsername},
-    {following: friendUsername}]}, {$set: {status: true}});
+  let checkFollowStatus = await Follower.checkFollow(
+    { $and: [ { username: req.session.uname }, { following: friendUsername }]});
+
+  if (checkFollowStatus != null) {
+    let unfollowFriend = await Follower.updateFollow({$and: [{username: myUsername},
+      {following: friendUsername}]}, {$set: {status: true}});
+  } else {
+    let newFollower = new Follower({
+      username: req.session.uname,
+      following: friendUsername,
+      status: true
+    });
+
+    let followInsert = await Follower.follow(newFollower, function (err, userInfo) {
+      if (err) {
+         console.log(err);
+      }
+      if (userInfo) {
+        status = 'unfollow';
+      }
+    });
+  }
 
   let followingcount = await Follower.getFollowersCount(
     { username: req.session.uname, status: true});
@@ -190,7 +224,7 @@ exports.getFollowerListPost = async function (req, res) {
   let getUser;
   let status = '';
   let checkStatusBtn;
-  console.log('called...getFollowerListPost');
+
   if (req.body.friendUsername == undefined) {
     followerList = await Follower.getFollowingList(
       { following: req.session.uname, status: true});
@@ -202,6 +236,7 @@ exports.getFollowerListPost = async function (req, res) {
   for (let i = followerList.length - 1; i >= 0; i--) {
     checkStatusBtn = await Follower.checkFollow(
       { $and: [{	username: req.session.uname }, { following: followerList[i].username }]});
+
     getUser = await User.getUser({ username: followerList[i].username });
 
     if (checkStatusBtn == null) {

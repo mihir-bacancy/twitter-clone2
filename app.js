@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const multer = require('multer');
+const nodemailer = require('nodemailer');
 
 
 const routes = require('./routes');
@@ -68,6 +69,38 @@ app.use(function(req, res, next) {
 
 mongoose.Promise = global.Promise;
 // =============================================================================
+
+ // let transporter = nodemailer.createTransport({
+ //        service: 'gmail',
+ //        port: 25,
+ //        secure: false, // true for 465, false for other ports
+ //        auth: {
+ //            user: 'mihir.kanzariya@bacancytechnology.com', // generated ethereal user
+ //            pass: 'Mihirkanzariya1!'  // generated ethereal password
+ //        },
+ //        tls: {
+ //          rejectUnauthorized: false
+ //        }
+ //  })
+
+ //  let mailOptions = {
+ //        from: '<foo@example.com>', // sender address
+ //        to: 'mihir.mscit16@gmail.com', // list of receivers
+ //        subject: 'Hello ✔', // Subject line
+ //        text: 'Hello world?', // plain text body
+ //        html: '<b>Hello world?</b>' // html body
+ //    };
+
+ //    transporter.sendMail(mailOptions, (error, info) => {
+ //        if (error) {
+ //            return console.log(error);
+ //        }
+ //        console.log('Message sent: %s', info.messageId);
+ //        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+ //        console.log(info)
+
+
+ //    });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,6 +1,5 @@
 
 function unlike (obj) {
-  console.log(obj);
   let unlike = obj.id;
   let name = parseInt(obj.name) - 1;
   $.ajax({

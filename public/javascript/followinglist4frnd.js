@@ -10,9 +10,7 @@ $('#followingcount').click(function () {
     data: { friendUsername: friendUsername }
   })
     .done(function (data) {
-      console.log('===', data);
       for (let i = data.length - 1; i >= 1; i--) {
-        console.log('m' + data[i].following);
         $('#followingA')
           .prepend(`<div class="twPc-div col-md-4 col-sm-6 col-xm-12">
            <a class="twPc-bg twPc-block" style="width=100%;background : url('/images/cover.jpg')"></a><div>

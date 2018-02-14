@@ -7,7 +7,6 @@ $('#Tweet').click(function () {
     data: { tweet: tweet }
   })
     .done(function (data) {
-      console.log('>>', data.getUserProfileCard);
       $('#tweetsFromFollowing')
         .prepend('<div class="well twtdiv row"><div class="col-md-2"><img src="' +
     data.getUserProfileCard.img + '" class="img-circle" width="48" height="48"/></div><div><strong> ' +

@@ -24,19 +24,20 @@ var FollowSchema = mongoose.Schema({
 
 var Follow = module.exports = mongoose.model('follow', FollowSchema);
 
+// Follow users
 module.exports.follow = function (newFollow, callback) {
   newFollow.save(callback);
 };
 
+// find user if
 module.exports.checkFollow = function (query) {
   return new Promise((resolve, reject) => {
-    console.log(query);
     Follow.findOne(query, function (err, data) {
       if (err) {
         reject(err);
       }
-      console.log('Datattttttt', data);
       resolve(data);
+
     });
   });
 };

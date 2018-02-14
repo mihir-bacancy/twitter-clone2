@@ -1,6 +1,7 @@
 const Feed = require('../models/feed.models');
 const User = require('../models/users.models');
 
+//Create Tweet
 exports.createTweetPost = async function (req, res) {
   let username = req.session.uname;
   let tweet = req.body.tweet;
@@ -17,7 +18,6 @@ exports.createTweetPost = async function (req, res) {
     if (err) {
       console.log(err);
     }
-    console.log('Tweet Created');
     res.send({tweet: newTweet.tweet, getUserProfileCard: getUserProfileCard});
   });
 };
@@ -72,14 +72,9 @@ exports.unLikePost = async function (req, res) {
 
 // Update Tweet
 exports.editTweetPost = async function (req, res) {
-  console.log('  >>  >>>>>>>>>>>>>>>>>>>', req.body);
   let editTweet = await Feed.updateTweet({_id: req.body.id}, {$set: { tweet: req.body.EditedTweet }});
-  console.log('<><><><><>	', editTweet);
   let getupdatedTweet = await Feed.getTweet({_id: req.body.id});
-  console.log(getupdatedTweet);
-
   if (editTweet) {
-    console.log(getupdatedTweet);
     res.send(getupdatedTweet);
   }
 };

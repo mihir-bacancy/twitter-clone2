@@ -7,7 +7,6 @@ function EditTweet () {
     data: {EditedTweet: EditedTweet, id: id}
   })
     .done(function (data) {
-      console.log(data[0].tweet);
       $('#tweet' + id).text('');
       $('#tweet' + id).append(data[0].tweet);
       $('#hidetweet' + id).val(data[0].tweet);
