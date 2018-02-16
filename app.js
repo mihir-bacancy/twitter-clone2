@@ -1,5 +1,6 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+let flash = require('express-flash');
 const express = require('express');
 const crypto = require('crypto');
 const path = require('path');
@@ -13,13 +14,18 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
+const passport = require('passport');
+const LocalStrategy = require("passport-local").Strategy;
+let bcrypt = require('bcrypt');
 
 
 const routes = require('./routes');
-
+const User = require('./models/users.models');
+const help = require('./controllers/helper.controller.js');
 const mongoDb = require('./helpers/mongoDb');
 
 const app = express();
+require('dotenv').config()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,13 +39,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('Shh, its a secret!'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: "Shh, its a secret!" ,  cookie: { maxAge: 600000000 }}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 console.log("console running...");
-app.use('/', routes)  ;
+app.use('/', routes);
+
 
 // ========================== Database Connection ==============================
 const mongoURL = mongoDb.makeConnectionString();
 mongoose.connect(mongoURL);
 const db = mongoose.connection;
+
 
 db.on('connecting', function() {
   console.log(chalk.yellow('connecting to MongoDB...'));
@@ -68,39 +79,6 @@ app.use(function(req, res, next) {
 });
 
 mongoose.Promise = global.Promise;
-// =============================================================================
-
- // let transporter = nodemailer.createTransport({
- //        service: 'gmail',
- //        port: 25,
- //        secure: false, // true for 465, false for other ports
- //        auth: {
- //            user: 'mihir.kanzariya@bacancytechnology.com', // generated ethereal user
- //            pass: 'Mihirkanzariya1!'  // generated ethereal password
- //        },
- //        tls: {
- //          rejectUnauthorized: false
- //        }
- //  })
-
- //  let mailOptions = {
- //        from: '<foo@example.com>', // sender address
- //        to: 'mihir.mscit16@gmail.com', // list of receivers
- //        subject: 'Hello ✔', // Subject line
- //        text: 'Hello world?', // plain text body
- //        html: '<b>Hello world?</b>' // html body
- //    };
-
- //    transporter.sendMail(mailOptions, (error, info) => {
- //        if (error) {
- //            return console.log(error);
- //        }
- //        console.log('Message sent: %s', info.messageId);
- //        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
- //        console.log(info)
-
-
- //    });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -119,5 +97,40 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+//LOCAL STRATEGY FOR AUTHENTICATION
+passport.use(new LocalStrategy(
+  async function(username, password, done) {
+  let getuser = await User.getUser({username: username});
+
+  if (getuser) {
+    let ismatch = await help.comparePassword(password,getuser);
+    if (ismatch) {
+      return done(null, getuser);
+    } else {
+      // req.flash('failed');
+      console.log('password incorrect')
+      return done(null, false ,{message:'password incorrect'});
+    }
+  } else {
+      return done(null,false,{message: 'user not found.'})
+   }
+  }
+ )
+);
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(async function(id, done) {
+ let user = await User.getUserById(id);
+ if (user) {
+    done(null, user);
+ }
+});
+
+
 app.listen();
 module.exports = app;

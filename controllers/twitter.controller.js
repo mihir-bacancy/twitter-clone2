@@ -1,17 +1,23 @@
 const User = require('../models/users.models');
+const cipher = require('../models/cipher.models');
 const Follower = require('../models/follow.models');
 var nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+var crypto = require('crypto');
+let flash = require('express-flash');
 
+let SECRETKEY = process.env.SECRETKEY;
 let TempMail;
 let TempUser;
-let  random, mailOptions, host, link;
+let random, mailOptions, host, link;
 
 exports.registerGet = function (req, res) {
 	if (req.session.sessToken !== undefined) {
 		res.redirect('/home');
 	} else {
+		req.flash('info', 'Welcome');
+		console.log('>>');
 		res.render('register');
 	}
 };
@@ -49,71 +55,86 @@ exports.registerPost = async function (req, res) {
 				}
 			]
 		});
-
-	if (checkUser) {
+	if (checkUser != null) {
 		res.render('register');
 	} else {
+		// Create user
 		let user = User.createUser(newUser, async function (err, userInfo) {
 			if (err) {
 				console.log(err);
 			}
-
-			let followInsert = await Follower.follow(newFollower, function (err, userInfo) {
-				if (err) {
-					console.log(err);
-				}
-			});
-			if (userInfo) {
-				//send email for verification
-				 random = Math.floor((Math.random() * 100) + 54);
-				host = req.get('host');
-				// console.log('Host ........', host);
-				link = 'http://' + req.get('host') + '/verify?id=' +  random + '&un=' + userInfo.username;
-
-				mailOptions = {
-					to: req.body.email,
-					subject: 'Please confirm your Email account',
-					html: 'Hello,<br> Please Click on the link to verify your email.' + link
+			if (userInfo !== null) {
+				// if User created generatae cipher
+				let tempUser = {
+					username: userInfo.username,
+					email: userInfo.email,
+					tempcreatedAt: userInfo.createAt
 				};
 
-				smtpTransport.sendMail(mailOptions, function (error, response) {
-					if (error) {
-						console.log(error);
-						res.end('error');
-					} else {
-						res.render('index', {to: mailOptions.to});
+				cipher.createCipher(tempUser, function (err, cipherInfo) {
+					if (err) {
+						console.log(err);
+					}
+
+					link = 'http://' + req.get('host') + '/verify?vToken=' + cipherInfo.cipherText;
+
+					mailOptions = {
+						to: req.body.email,
+						subject: 'Please confirm your Email account',
+						html: 'Hello,<br> Please Click on the link to verify your email.' + link
+					};
+					console.log(mailOptions);
+
+					// sending mail to created user
+					smtpTransport.sendMail(mailOptions, function (error, response) {
+						if (error) {
+							console.log(error);
+							res.end('error');
+						} else {
+							req.flash('info', 'mail has been send to ' + mailOptions.to + ' Please verify your account');
+							res.render('login', {to: mailOptions.to});
+						}
+					});
+				});
+				// follow own by default
+				let followInsert = await Follower.follow(newFollower, function (err, userInfo) {
+					if (err) {
+						console.log(err);
 					}
 				});
-
+			} else {
+				res.render('register');
 			}
 		});
 	}
-};
+}
 
-//verification of account ( email verification )
+// verification of account ( email verification )
 exports.verifyGet = async function (req, res) {
-	if ((req.protocol + '://' + req.get('host')) == ('http://' + host)) {
-		// console.log('Domain is matched. Information is from Authentic email');
-		if (req.query.id ==  random) {
-			console.log('email is verified');
-			let user = await User.updateUser({ username: req.query.un}, {$set: {status: true}});
-			res.render('login');
-		} else {
-			// console.log('email is not verified');
-			res.end('<h1>Bad Request</h1>');
-		}
+	// console.log('Domain is matched. Information is from Authentic email');
+	let getCipher = await cipher.checkCipher({cipherText: req.query.vToken});
+
+	if (req.query.vToken === getCipher.cipherText && getCipher.status === true) {
+		let updatecipher = await cipher.updateCipher({cipherText: req.query.vToken},
+			{$set: {status: false}});
+		let updateuser = await User.updateUser({username: getCipher.username},
+			{$set: {status: true}});
+		req.flash('success', 'registration success. Please do login');
+		res.render('login');
 	} else {
-		res.end('<h1>Request is from unknown source');
+		res.end('<h1>Token Expired</h1>');
 	}
-};
+}
 
 exports.loginGet = function (req, res) {
-	if (req.session.sessToken !== undefined) {
+	if (req.user) {
 		res.redirect('/home');
 	} else {
 		res.render('login');
 	}
-};
+	console.log(req.user);
+
+}
 
 exports.loginPost = async function (req, res) {
 	let uname = req.body.uname;
@@ -132,7 +153,7 @@ exports.loginPost = async function (req, res) {
 					username: user.username,
 					email: user.email
 				},
-				'SECRETKEY', {
+				SECRETKEY, {
 					expiresIn: 60000
 				});
 			sess.sessToken = token;
@@ -144,7 +165,8 @@ exports.loginPost = async function (req, res) {
 			res.redirect('/login');
 		}
 	} else {
-		res.render('index');
+		req.flash('info', 'Please Check your email and click on the link to verify your account');
+		res.render('login');
 	}
 };
 
@@ -208,6 +230,8 @@ exports.resetpwPost = async function (req, res) {
 };
 
 exports.logout = function (req, res) {
+
+	req.flash('success','Logout successfull');
 	req.session.destroy();
 	res.redirect('/login');
 };
@@ -215,7 +239,7 @@ exports.logout = function (req, res) {
 let smtpTransport = nodemailer.createTransport({
 	service: 'Gmail',
 	auth: {
-		user: 'mihir.kanzariya@bacancytechnology.com',
-		pass: 'Mihirkanzariya1!'
+		user: 'Enter Email id',
+		pass: 'Enter Password'
 	}
 });

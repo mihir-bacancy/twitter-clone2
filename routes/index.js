@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 let multer = require('multer');
+const passport = require('passport');
+const LocalStrategy = require("passport-local").Strategy;
+
+const User = require('../models/users.models');
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -22,9 +26,9 @@ const feedController = require('../controllers/feed.controller.js');
 
 
 
-router.get('/', isAuthenticated, homeController.homeGet);
+router.get('/', homeController.homeGet);
 router.get('/login', twitterController.loginGet);
-router.post('/login', twitterController.loginPost);
+// router.post('/login', twitterController.loginPost);
 router.get('/register', twitterController.registerGet);
 router.post('/register', twitterController.registerPost);
 router.get('/verify', twitterController.verifyGet);
@@ -33,38 +37,57 @@ router.post('/finduser', twitterController.finduserPost);
 router.get('/resetpw', twitterController.resetpwGet);
 router.post('/resetpw', twitterController.resetpwPost);
 router.get('/logout', twitterController.logout);
-router.get('/home', isAuthenticated, homeController.homeGet);
-router.get('/editprofile', isAuthenticated, homeController.profileGet);
+router.get('/home', ensureAuthenticated,homeController.homeGet);
+router.get('/editprofile', ensureAuthenticated, homeController.profileGet);
 router.post('/profile', upload.any(), homeController.profilePost);
-router.get('/showProfile', isAuthenticated, homeController.showProfileGet);
+router.get('/showProfile', ensureAuthenticated, homeController.showProfileGet);
 
-router.get('/searchFriend', searchFriendController.searchFriendGet);
+router.get('/searchFriend', ensureAuthenticated, searchFriendController.searchFriendGet);
 router.post('/searchFriend', searchFriendController.searchFriendPost);
-router.get('/showFriendProfile', searchFriendController.showFriendProfileGet);
-router.post('/follow', searchFriendController.unfollowPost);
-router.post('/unfollow', searchFriendController.followPost);
+router.get('/showFriendProfile', ensureAuthenticated, searchFriendController.showFriendProfileGet);
+router.post('/follow', ensureAuthenticated, searchFriendController.unfollowPost);
 
-router.post('/createTweet', feedController.createTweetPost);
+// For Follow user.
+router.post('/unfollow', ensureAuthenticated, searchFriendController.followPost);
+
+router.post('/createTweet', ensureAuthenticated, feedController.createTweetPost);
 
 // router.get('/', homeController.demoGet);
 
-router.post('/following', searchFriendController.getFollowingListPost);
-router.post('/follower', searchFriendController.getFollowerListPost);
+router.post('/following', ensureAuthenticated, searchFriendController.getFollowingListPost);
+router.post('/follower', ensureAuthenticated, searchFriendController.getFollowerListPost);
 
-router.post('/getTweet', searchFriendController.getTweetPost);
-router.post('/getFriendTweets', searchFriendController.getFriendTweetPost);
+router.post('/getTweet', ensureAuthenticated, searchFriendController.getTweetPost);
+router.post('/getFriendTweets', ensureAuthenticated, searchFriendController.getFriendTweetPost);
 
-router.post('/like', feedController.likePost);
-router.post('/unLike', feedController.unLikePost);
+router.post('/like', ensureAuthenticated, feedController.likePost);
+router.post('/unLike', ensureAuthenticated, feedController.unLikePost);
 
-router.post('/editTweet', feedController.editTweetPost);
+router.post('/editTweet', ensureAuthenticated, feedController.editTweetPost);
+
+
+
+
+router.post('/login',
+
+  passport.authenticate('local',
+    {
+      successRedirect: '/home',
+      failureRedirect: '/login',
+      failureFlash: true,
+    }
+  )
+);
+
+
 
 module.exports = router;
 
-function isAuthenticated (req, res, next) {
-  if (req.session.sessToken || req.session.uname) {
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated())
     return next();
-  } else {
+  else {
     res.redirect('/login');
   }
 }
+

@@ -3,7 +3,7 @@ const User = require('../models/users.models');
 
 //Create Tweet
 exports.createTweetPost = async function (req, res) {
-  let username = req.session.uname;
+  let username = req.user.username;
   let tweet = req.body.tweet;
 
   let newTweet = new Feed({
@@ -12,7 +12,7 @@ exports.createTweetPost = async function (req, res) {
   });
 
   let getUserProfileCard = await User.getUser(
-    { username: req.session.uname});
+    { username: req.user.username});
 
   let createTweet = Feed.createTweet(newTweet, function (err, NewTweet) {
     if (err) {
@@ -25,7 +25,7 @@ exports.createTweetPost = async function (req, res) {
 // Liker perticular post
 exports.likePost = async function (req, res) {
   let _id = req.body._id;
-  let liker = req.session.uname;
+  let liker = req.user.username;
   let likeTweet = await Feed.like(
     {
       _id: _id
@@ -47,7 +47,7 @@ exports.likePost = async function (req, res) {
 // Unlike tweet
 exports.unLikePost = async function (req, res) {
   let _id = req.body._id;
-  let liker = req.session.uname;
+  let liker = req.user.username;
 
   let unLikeTweet = await Feed.unLike(
     {
