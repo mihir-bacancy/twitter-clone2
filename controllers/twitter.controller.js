@@ -1,6 +1,9 @@
 const User = require('../models/users.models');
 const cipher = require('../models/cipher.models');
 const Follower = require('../models/follow.models');
+
+const help = require('../controllers/helper.controller.js');
+
 var nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -8,12 +11,11 @@ var crypto = require('crypto');
 let flash = require('express-flash');
 
 let SECRETKEY = process.env.SECRETKEY;
-let TempMail;
-let TempUser;
 let random, mailOptions, host, link;
 
+
 exports.registerGet = function (req, res) {
-	if (req.session.sessToken !== undefined) {
+	if (req.user !== undefined) {
 		res.redirect('/home');
 	} else {
 		req.flash('info', 'Welcome');
@@ -23,6 +25,7 @@ exports.registerGet = function (req, res) {
 };
 
 exports.registerPost = async function (req, res) {
+	console.log('post');
 	let username = req.body.uname;
 	let name = req.body.name;
 	let email = req.body.email;
@@ -43,6 +46,7 @@ exports.registerPost = async function (req, res) {
 		status: true
 	});
 
+	//check user is exist or not
 	let checkUser = await User.getUser(
 		{
 			$or:
@@ -64,10 +68,9 @@ exports.registerPost = async function (req, res) {
 				console.log(err);
 			}
 			if (userInfo !== null) {
-				// if User created generatae cipher
+				// if User created >> generatae cipher
 				let tempUser = {
 					username: userInfo.username,
-					email: userInfo.email,
 					tempcreatedAt: userInfo.createAt
 				};
 
@@ -76,7 +79,7 @@ exports.registerPost = async function (req, res) {
 						console.log(err);
 					}
 
-					link = 'http://' + req.get('host') + '/verify?vToken=' + cipherInfo.cipherText;
+					link = 'http://' + req.get('host') + '/verifyAccount?vToken=' + cipherInfo.cipherText;
 
 					mailOptions = {
 						to: req.body.email,
@@ -107,24 +110,20 @@ exports.registerPost = async function (req, res) {
 			}
 		});
 	}
-}
+};
 
-// verification of account ( email verification )
-exports.verifyGet = async function (req, res) {
-	// console.log('Domain is matched. Information is from Authentic email');
-	let getCipher = await cipher.checkCipher({cipherText: req.query.vToken});
-
-	if (req.query.vToken === getCipher.cipherText && getCipher.status === true) {
-		let updatecipher = await cipher.updateCipher({cipherText: req.query.vToken},
-			{$set: {status: false}});
-		let updateuser = await User.updateUser({username: getCipher.username},
+exports.verifyAccount = async function (req, res) {
+	let isVerified = help.verifyLink(req.query.vToken);
+	if (isVerified) {
+		let updateuser = await User.updateUser({username: isVerified.username},
 			{$set: {status: true}});
 		req.flash('success', 'registration success. Please do login');
 		res.render('login');
 	} else {
 		res.end('<h1>Token Expired</h1>');
 	}
-}
+};
+
 
 exports.loginGet = function (req, res) {
 	if (req.user) {
@@ -133,8 +132,7 @@ exports.loginGet = function (req, res) {
 		res.render('login');
 	}
 	console.log(req.user);
-
-}
+};
 
 exports.loginPost = async function (req, res) {
 	let uname = req.body.uname;
@@ -177,30 +175,68 @@ exports.finduserGet = function (req, res) {
 
 // Find user for reset pw post
 exports.finduserPost = async function (req, res) {
-	TempUser = req.body.uname;
-	TempMail = req.body.email;
+	let username = req.body.uname;
+	let mail = req.body.email;
 	let user = await User.getUser(
 		{
 			$and:
 			[
 				{
-					username: TempUser
+					username: username
 				},
 				{
-					email: TempMail
+					email: mail
 				}
 			]
 		});
 
 	if (user) {
-		res.render('resetpw');
+		let tempUser = {
+			username: user.username,
+			tempcreatedAt: user.createAt
+		};
+
+		cipher.createCipher(tempUser, function (err, cipherInfo) {
+			if (err) {
+				console.log(err);
+			}
+			console.log('here');
+			link = 'http://' + req.get('host') + '/verifyResetpw?vToken=' + cipherInfo.cipherText;
+
+			mailOptions = {
+				to: req.body.email,
+				subject: 'Please confirm your Email account',
+				html: 'Hello,<br> Please Click on the link to reset your password.' + link
+			};
+			console.log(mailOptions);
+
+			// sending mail to created user
+			smtpTransport.sendMail(mailOptions, function (error, response) {
+				if (error) {
+					console.log(error);
+					res.end('error');
+				} else {
+					req.flash('info', 'password reset link has been send to ' + mailOptions.to);
+					res.render('login');
+				}
+			});
+		});
+		// res.render('resetpw');
 	} else {
+		req.flash('failed', 'User not Found');
 		res.render('finduser');
 	}
 };
 
-exports.resetpwGet = function (req, res) {
-	res.render('resetpw');
+exports.verifyResetpw = function (req, res) {
+	let isVerified = help.verifyLink(req.query.vToken);
+	if (isVerified) {
+		req.flash('success', 'Reset your password');
+		res.render('resetpw', {checkhash: req.query.vToken});
+	} else {
+		req.flash('failed', 'Token Expired');
+		res.render('finduser');
+	}
 };
 
 // reset pw and store in hash format
@@ -210,11 +246,13 @@ exports.resetpwPost = async function (req, res) {
 	let hashconfirmpw;
 
 	if (pw == confirmpw) {
+		let getUser = await cipher.checkCipher({cipherText: req.body.hash});
+
 		bcrypt.hash(confirmpw, 10, async function (err, hash) {
 			hashconfirmpw = hash;
 			let user = await User.updateUser(
 				{
-					email: TempMail
+					username: getUser.username
 				},
 				{
 					$set:
@@ -223,6 +261,7 @@ exports.resetpwPost = async function (req, res) {
 				}
 				});
 		});
+		req.flash('success', 'Your password has been reset successfully!');
 		res.redirect('./login');
 	} else {
 		res.send('plz enter same pw on both textfield');
@@ -230,16 +269,16 @@ exports.resetpwPost = async function (req, res) {
 };
 
 exports.logout = function (req, res) {
-
-	req.flash('success','Logout successfull');
+	req.flash('success', 'Logout successfull');
 	req.session.destroy();
 	res.redirect('/login');
 };
 
+
 let smtpTransport = nodemailer.createTransport({
 	service: 'Gmail',
 	auth: {
-		user: 'Enter Email id',
-		pass: 'Enter Password'
+		user: 'mihir.kanzariya@bacancytechnology.com',
+		pass: 'Mihirkanzariya1!'
 	}
 });

@@ -8,7 +8,7 @@ function unlike (obj) {
     data: { _id: unlike }
   })
     .done(function (data) {
-      $('#' + unlike).attr({src: 'images/twitterLike.png', onclick: 'like(this)'});
+      $('#' + unlike).attr({src: '/images/twitterLike.png', onclick: 'like(this)'});
       $('#cnt' + unlike).text(data.likercount);
     });
 }

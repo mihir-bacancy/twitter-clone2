@@ -6,6 +6,25 @@
 
 <body>
 <div class="container">
+     <% if(messages.success){ %>
+    <div class="alert alert-success alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>Success!</strong> <%= messages.success %>
+    </div>
+  <% } %>
+   <% if(messages.info){ %>
+    <div class="alert alert-info alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>INFO!</strong> <%= messages.info %>
+    </div>
+  <% } %>
+  <% if(messages.failed){ %>
+    <div class="alert alert-danger alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>Failed!</strong> <%= messages.failed %>
+
+    </div>
+  <% } %>
     <div class="row">
       <div class="col-md-4 col-md-offset-4">
         <div class="panel panel-default">

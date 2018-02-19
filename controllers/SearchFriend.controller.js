@@ -2,10 +2,6 @@ const User = require('../models/users.models');
 const Follower = require('../models/follow.models');
 const Feed = require('../models/feed.models');
 
-exports.searchFriendGet = function (req, res) {
-	res.render('searchFriend');
-};
-
 // Search User to follow
 exports.searchFriendPost = async function (req, res) {
 	let Query = req.body.search;
@@ -37,7 +33,7 @@ exports.searchFriendPost = async function (req, res) {
 
 	if (users) {
 		if (req.body.checkbtn === undefined) {
-			res.render('searchFriend', { users: users });
+			res.render('searchFriend', { users: users, username: req.user.username});
 		} else {
 			res.send(users);
 		}
@@ -47,7 +43,7 @@ exports.searchFriendPost = async function (req, res) {
 };
 
 // Get other user's profile information like tweet, follower, following
-exports.showFriendProfileGet = async function (req, res) {
+exports.showFriendProfile = async function (req, res) {
 	let friendUsername = req.query.id;
 	let status = 'follow';
 
@@ -105,40 +101,19 @@ exports.showFriendProfileGet = async function (req, res) {
 	});
 };
 
-// Follow other user
-exports.unfollowPost = async function (req, res) {
+exports.unfollow = async function (req, res) {
 	let myUsername = req.user.username;
 	let friendUsername = req.body.friendUsername;
 
-	let newFollower = new Follower({
-		username: req.user.username,
-		following: friendUsername,
-		status: true
-	});
-
-	let checkFollowStatus = await Follower.checkFollow(
-		{ $and: [ { username: req.user.username }, { following: friendUsername }]});
-
-	if (checkFollowStatus !== null) {
 		let unfollowFriend = await Follower.updateFollow({$and: [{username: myUsername},
 			{following: friendUsername}]}, {$set: {status: false}});
 		let followingcount = await Follower.getFollowersCount(
 			{ username: req.user.username, status: true});
+
 		res.send({followingcount: followingcount});
-	} else {
-		let followInsert = await Follower.follow(newFollower, function (err, userInfo) {
-			if (err) {
-				console.log(err);
-			}
-			if (userInfo) {
-				res.send('unfollowPost');
-			}
-		});
-	}
 };
 
-// follow friends
-exports.followPost = async function (req, res) {
+exports.follow = async function (req, res) {
 	let myUsername = req.user.username;
 	let friendUsername = req.body.friendUsername;
 
@@ -172,16 +147,19 @@ exports.followPost = async function (req, res) {
 };
 
 // Get Followinglist
-exports.getFollowingListPost = async function (req, res) {
+exports.getFollowingList = async function (req, res) {
 	let followingList;
 	let getUser;
 	let status = '';
 	let checkStatusBtn;
+	let isFriend;
 
 	if (req.body.friendUsername == undefined) {
+		isFriend = false;
 		followingList = await Follower.getFollowingList(
 			{ username: req.user.username, status: true});
 	} else {
+		isFriend = true;
 		followingList = await Follower.getFollowingList(
 			{ username: req.body.friendUsername, status: true});
 	}
@@ -213,22 +191,26 @@ exports.getFollowingListPost = async function (req, res) {
 	if (followingList == null) {
 		res.send('newFollowing');
 	} else {
-		console.log('---',followingList);
-		res.send(followingList);
+		let username = isFriend ? req.body.friendUsername : req.user.username;
+		console.log('username', username);
+		res.json({followingList: followingList, username: username});
 	}
 };
 
 // Get Followerlist
-exports.getFollowerListPost = async function (req, res) {
+exports.getFollowerList = async function (req, res) {
 	let followerList;
 	let getUser;
 	let status = '';
 	let checkStatusBtn;
+	let isFriend;
 
 	if (req.body.friendUsername == undefined) {
+		isFriend = false;
 		followerList = await Follower.getFollowingList(
 			{ following: req.user.username, status: true});
 	} else {
+		isFriend = true;
 		followerList = await Follower.getFollowingList(
 			{ following: req.body.friendUsername, status: true});
 	}
@@ -260,12 +242,13 @@ exports.getFollowerListPost = async function (req, res) {
 	if (followerList == null) {
 		res.send('newFollowing');
 	} else {
-		res.send(followerList);
+		let username = isFriend ? req.body.friendUsername : req.user.username;
+		res.json({followerList: followerList, username: username});
 	}
 };
 
 // Get Tweet for loggedin user
-exports.getTweetPost = async function (req, res) {
+exports.getTweet = async function (req, res) {
 	let getTweets = await Feed.getTweet({username: req.user.username});
 	if (getTweets == null) {
 		res.send('newFollowing');
@@ -275,7 +258,7 @@ exports.getTweetPost = async function (req, res) {
 };
 
 // get tweet of otherusers
-exports.getFriendTweetPost = async function (req, res) {
+exports.getFriendTweet = async function (req, res) {
 	let friendUsername = req.body.friendUsername;
 	let getFriendTweets = await Feed.getTweet({username: friendUsername});
 	res.send(getFriendTweets);

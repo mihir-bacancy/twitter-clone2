@@ -1,7 +1,7 @@
 function unfollow (obj) {
   $.ajax({
     method: 'POST',
-    url: '/follow',
+    url: '/unfollow',
     data: {friendUsername: obj.id}
   })
     .done(function (data) {

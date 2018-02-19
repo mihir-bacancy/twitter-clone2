@@ -31,7 +31,7 @@
         <!-- Collection of nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse" style="background-color: #ffffff;">
 
-          <a href="/home"><img clas="center-block" style="align-self: center;" src="twitterlogo.png" class="twitterlogo"  /></a>
+          <a href="/home"><img clas="center-block" style="align-self: center;" src="/twitterlogo.png" class="twitterlogo"  /></a>
             <form class="navbar-form navbar-left" method="post" action="/searchFriend">
               <div class="input-group">
                     <input type="text" class="form-control search" placeholder="Search friends" name="search" id="search">
@@ -53,7 +53,7 @@
                 <li class="dropdown" >
                     <a data-toggle="dropdown" class="dropdown-toggle">Profile <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/showProfile">Profile</a></li>
+                        <li><a href="/showProfile/<%=username%>">Profile</a></li>
                         <li class="divider"></li>
                         <li><a href="/logout">Sign out</a></li>
                     </ul>

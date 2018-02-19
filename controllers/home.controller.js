@@ -3,11 +3,11 @@ const Feed = require('../models/feed.models');
 const Follower = require('../models/follow.models');
 const following = require('../models/users.models');
 
+
 // Get Details like following list,follower list,follower count,following count
 // tweet count,profile card following user tweet like unlike status and sort tweet by date
 // and time
 exports.homeGet = async function (req, res) {
-	console.log("==>",req.user);
 	let followingList = await Follower.getFollowingList(
 		{ username: req.user.username, status: true});
 	let getUserProfileCard = await User.getUser(
@@ -50,7 +50,9 @@ exports.homeGet = async function (req, res) {
 		getUserProfileCard: getUserProfileCard,
 		followercount: followercount,
 		followingcount: followingcount,
-		getTweetCount: getTweetCount
+		getTweetCount: getTweetCount,
+		username: req.user.username,
+
 	});
 };
 
@@ -76,8 +78,10 @@ exports.showProfileGet = async function (req, res) {
 			followercount: followercount,
 			followingcount: followingcount,
 			getTweets: getTweets,
-			getTweetCount: getTweetCount
+			getTweetCount: getTweetCount,
+			username: req.user.username
 		});
+
 };
 
 // Render on edit profile
@@ -85,7 +89,7 @@ exports.profileGet = async function (req, res) {
 	let checkUser = await User.getUser({
 		username: req.user.username
 	});
-	res.render('editprofile', { checkUser: checkUser});
+	res.render('editprofile', { checkUser: checkUser,username: req.user.username});
 };
 
 // submit and save edited profile
@@ -109,7 +113,7 @@ exports.profilePost = async function (req, res) {
 				username: req.user.username
 			}, name, img, pw, email);
 	}
-	res.redirect('/showProfile');
+	res.redirect('/showProfile/'+req.user.username);
 };
 
 // To put tweet time in proper format

@@ -2,7 +2,7 @@ const Feed = require('../models/feed.models');
 const User = require('../models/users.models');
 
 //Create Tweet
-exports.createTweetPost = async function (req, res) {
+exports.createTweet = async function (req, res) {
   let username = req.user.username;
   let tweet = req.body.tweet;
 
@@ -23,7 +23,7 @@ exports.createTweetPost = async function (req, res) {
 };
 
 // Liker perticular post
-exports.likePost = async function (req, res) {
+exports.like = async function (req, res) {
   let _id = req.body._id;
   let liker = req.user.username;
   let likeTweet = await Feed.like(
@@ -45,7 +45,7 @@ exports.likePost = async function (req, res) {
 };
 
 // Unlike tweet
-exports.unLikePost = async function (req, res) {
+exports.unLike = async function (req, res) {
   let _id = req.body._id;
   let liker = req.user.username;
 
@@ -70,9 +70,10 @@ exports.unLikePost = async function (req, res) {
   }
 };
 
-// Update Tweet
-exports.editTweetPost = async function (req, res) {
-  let editTweet = await Feed.updateTweet({_id: req.body.id}, {$set: { tweet: req.body.EditedTweet }});
+// Edit Tweet
+exports.editTweet = async function (req, res) {
+  let editTweet = await Feed.updateTweet({_id: req.body.id},
+    {$set: { tweet: req.body.EditedTweet }});
   let getupdatedTweet = await Feed.getTweet({_id: req.body.id});
   if (editTweet) {
     res.send(getupdatedTweet);

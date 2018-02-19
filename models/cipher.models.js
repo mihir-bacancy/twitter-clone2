@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
 let crypto = require('crypto');
 
+const help = require('../controllers/helper.controller.js');
+
 let SECRETKEY = process.env.SECRETKEY;
 
 let cipherSchema = mongoose.Schema({
   username: {
-    type: String,
-    required: true
-  },
-  email: {
     type: String,
     required: true
   },
@@ -31,10 +29,9 @@ let cipherSchema = mongoose.Schema({
 let cipher = module.exports = mongoose.model('cipher', cipherSchema);
 
 module.exports.createCipher = function (newCipher, callback) {
-  let cipheredText = this.Cipher(newCipher);
+  let cipheredText = help.Cipher(newCipher);
   let cipherData = new cipher({
     username: newCipher.username,
-    email: newCipher.email,
     cipherText: cipheredText,
     status: true,
   });
@@ -64,8 +61,8 @@ module.exports.updateCipher = function (query, condition) {
   });
 };
 
-module.exports.Cipher = function(cipherUser){
-  let cipher = crypto.createCipher('aes-128-cbc', 'SECRETKEY');
-  let mycipher = cipher.update(JSON.stringify(cipherUser), 'utf8', 'hex');
-  return mycipher += cipher.final('hex');
-}
+// module.exports.Cipher = function(cipherUser){
+//   let cipher = crypto.createCipher('aes-128-cbc', 'SECRETKEY');
+//   let mycipher = cipher.update(JSON.stringify(cipherUser), 'utf8', 'hex');
+//   return mycipher += cipher.final('hex');
+// }

@@ -6,6 +6,7 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const User = require('../models/users.models');
 
+//Upload profile pic
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/images/');
@@ -19,57 +20,79 @@ let storage = multer.diskStorage({
 });
 
 let upload = multer({ storage: storage });
+
+//Controllers
 const twitterController = require('../controllers/twitter.controller.js');
 const homeController = require('../controllers/home.controller.js');
 const searchFriendController = require('../controllers/SearchFriend.controller.js');
 const feedController = require('../controllers/feed.controller.js');
 
-
-
-router.get('/', homeController.homeGet);
-router.get('/login', twitterController.loginGet);
-// router.post('/login', twitterController.loginPost);
+//Register user
 router.get('/register', twitterController.registerGet);
 router.post('/register', twitterController.registerPost);
-router.get('/verify', twitterController.verifyGet);
+
+//Login
+router.get('/login', twitterController.loginGet);
+
+//Home route
+router.get('/', ensureAuthenticated, homeController.homeGet);
+router.get('/home', ensureAuthenticated,homeController.homeGet);
+
+
+//Verify Email conformation
+router.get('/verifyAccount', twitterController.verifyAccount);
+router.get('/verifyResetpw', twitterController.verifyResetpw);
+
+// Find User to change password
 router.get('/finduser', twitterController.finduserGet);
 router.post('/finduser', twitterController.finduserPost);
-router.get('/resetpw', twitterController.resetpwGet);
+
+//Restet pw of found user
+// router.get('/resetpw', twitterController.resetpwGet);
 router.post('/resetpw', twitterController.resetpwPost);
-router.get('/logout', twitterController.logout);
-router.get('/home', ensureAuthenticated,homeController.homeGet);
-router.get('/editprofile', ensureAuthenticated, homeController.profileGet);
+
+//Edit profile of logged in user
+router.get('/:username/editprofile', ensureAuthenticated, homeController.profileGet);
 router.post('/profile', upload.any(), homeController.profilePost);
-router.get('/showProfile', ensureAuthenticated, homeController.showProfileGet);
 
-router.get('/searchFriend', ensureAuthenticated, searchFriendController.searchFriendGet);
+//Show profile of logged in user
+// router.get('/showProfile', ensureAuthenticated, homeController.showProfileGet);
+router.get('/showProfile/:username', homeController.showProfileGet);
+
+//search user by name
+// router.get('/searchFriend', ensureAuthenticated, searchFriendController.searchFriendGet);
 router.post('/searchFriend', searchFriendController.searchFriendPost);
-router.get('/showFriendProfile', ensureAuthenticated, searchFriendController.showFriendProfileGet);
-router.post('/follow', ensureAuthenticated, searchFriendController.unfollowPost);
 
-// For Follow user.
-router.post('/unfollow', ensureAuthenticated, searchFriendController.followPost);
+//show other user profile
+router.get('/showFriendProfile/:username', ensureAuthenticated, searchFriendController.showFriendProfile);
 
-router.post('/createTweet', ensureAuthenticated, feedController.createTweetPost);
+//Follow & Unfollow other user
+router.post('/unfollow', ensureAuthenticated, searchFriendController.unfollow);
+router.post('/follow', ensureAuthenticated, searchFriendController.follow);
 
-// router.get('/', homeController.demoGet);
+//Create Tweet
+router.post('/createTweet', ensureAuthenticated, feedController.createTweet);
 
-router.post('/following', ensureAuthenticated, searchFriendController.getFollowingListPost);
-router.post('/follower', ensureAuthenticated, searchFriendController.getFollowerListPost);
+//Edit Tweet
+router.post('/editTweet', ensureAuthenticated, feedController.editTweet);
 
-router.post('/getTweet', ensureAuthenticated, searchFriendController.getTweetPost);
-router.post('/getFriendTweets', ensureAuthenticated, searchFriendController.getFriendTweetPost);
+//list of Following and Followers
+router.post('/following', ensureAuthenticated, searchFriendController.getFollowingList);
+router.post('/follower', ensureAuthenticated, searchFriendController.getFollowerList);
 
-router.post('/like', ensureAuthenticated, feedController.likePost);
-router.post('/unLike', ensureAuthenticated, feedController.unLikePost);
+//List tweets of user
+router.post('/getTweet', ensureAuthenticated, searchFriendController.getTweet);
+router.post('/getFriendTweets', ensureAuthenticated, searchFriendController.getFriendTweet);
 
-router.post('/editTweet', ensureAuthenticated, feedController.editTweetPost);
+//like & unlike features
+router.post('/like', ensureAuthenticated, feedController.like);
+router.post('/unLike', ensureAuthenticated, feedController.unLike);
 
+//Logout
+router.get('/logout', twitterController.logout);
 
-
-
+//Login >> using Passport-local
 router.post('/login',
-
   passport.authenticate('local',
     {
       successRedirect: '/home',
@@ -83,6 +106,7 @@ router.post('/login',
 
 module.exports = router;
 
+//Middleware to ensure login
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated())
     return next();
