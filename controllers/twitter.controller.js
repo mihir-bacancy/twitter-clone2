@@ -260,6 +260,7 @@ exports.resetpwPost = async function (req, res) {
 				});
 		});
 		req.flash('success', 'Your password has been reset successfully!');
+		
 		res.redirect('./login');
 	} else {
 		res.send('plz enter same pw on both textfield');
@@ -275,7 +276,7 @@ exports.logout = function (req, res) {
 let smtpTransport = nodemailer.createTransport({
 	service: 'Gmail',
 	auth: {
-		user: 'mihir.kanzariya@bacancytechnology.com',
-		pass: 'Mihirkanzariya1!'
+		user: 'enter you mail id',
+		pass: 'enter your password'
 	}
 });
