@@ -16,42 +16,71 @@
 						<div>
 							<div class="twPc-button" >
 
+<<<<<<< Updated upstream
 								<a href="/showProfile/<%= getUserProfileCard.username %>" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= getUserProfileCard.username %></a>
 							</div>
 								<a title="Mert Salih Kaplan" href="/showProfile/<%= getUserProfileCard.username %>"
+=======
+								<a href="" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= getUserProfileCard.username %></a>
+							</div>
+								<a title="Mert Salih Kaplan" href="https://twitter.com/sathwara_mihir"
+>>>>>>> Stashed changes
 										class="twPc-avatarLink">
 									<img alt="Mert Salih Kaplan" src="<%= getUserProfileCard.img %>" class="twPc-avatarImg">
 								</a>
 
 								<div class="twPc-divUser">
 									<div class="twPc-divName">
+<<<<<<< Updated upstream
 											<a href="/showProfile/<%= getUserProfileCard.username %>"><%= getUserProfileCard.name %></a>
 									</div>
 									<span>
 									<a href="/showProfile/<%= getUserProfileCard.username %>">@<span><%= getUserProfileCard.username %></span></a>
+=======
+											<a href="https://twitter.com/sathwara_mihir"><%= getUserProfileCard.name %></a>
+									</div>
+									<span>
+									<a href="https://twitter.com/mertskaplan">@<span><%= getUserProfileCard.username %></span></a>
+>>>>>>> Stashed changes
 									</span>
 						</div>
 
 					<div class="twPc-divStats">
 						<ul class="twPc-Arrange">
 							<li class="twPc-ArrangeSizeFit">
+<<<<<<< Updated upstream
 								<a href="" title="<%= getTweetCount %> Tweets">
+=======
+								<a href="" title="9.840 Tweet">
+>>>>>>> Stashed changes
 									<span class="twPc-StatLabel twPc-block">Tweets</span>
 									<span class="twPc-StatValue"><%= getTweetCount %></span>
 								</a>
 							</li>
 
 							<li class="twPc-ArrangeSizeFit">
+<<<<<<< Updated upstream
 								<a href="" title="<%= followingcount-1 %> Following">
 									<span class="twPc-StatLabel twPc-block">Following</span>
 									<span class="twPc-StatValue"><%= followingcount-1 %> </span>
+=======
+								<a href="" title="885 Following">
+									<span class="twPc-StatLabel twPc-block">Following</span>
+									<span class="twPc-StatValue"><%= followingcount %></span>
+>>>>>>> Stashed changes
 								</a>
 							</li>
 
 							<li class="twPc-ArrangeSizeFit">
+<<<<<<< Updated upstream
 								<a href="" title="<%= followercount-1 %> Followers">
 									<span class="twPc-StatLabel twPc-block">Followers</span>
 									<span class="twPc-StatValue"><%= followercount-1 %> </span>
+=======
+								<a href="" title="1.810 Followers">
+									<span class="twPc-StatLabel twPc-block">Followers</span>
+									<span class="twPc-StatValue"><%= followercount %></span>
+>>>>>>> Stashed changes
 								</a>
 							</li>
 						</ul>
@@ -64,7 +93,8 @@
 
 			<div class="well clearfix row" style="background-color: #e8f4fb">
 				<div class="col-md-1 col-sm-1 col-xs-1"><img src="<%= getUserProfileCard.img %>" class="img-circle" alt="Cinque Terre" width="32" height="32"></div>
-				<div class="col-md-11"><textarea class="form-control" rows="4" name="tweetArea" id="tweetArea" placeholder="What's Happening?" style="border-color: #a3d4f2;border-radius: 17px;" ></textarea><br/>
+
+				<div class="col-md-11"><textarea class="form-control" rows="4" name="tweetArea" id="tweetArea" placeholder="What's Happening?"  style="border-color: #a3d4f2;border-radius: 17px;" ></textarea><br/>
 				<button class="btn btn-primary pull-right" id="Tweet" style="border-radius: 50px;background-color: #48aae6" name="Tweet"><b>Tweet</b></button></div>
 
 
@@ -90,20 +120,23 @@
 								<% let flag %>
 								<div class="col-md-10">
 									<div class="row">
-										<div class="col-md-11 col-sm-11 col-xs-11">
-											<strong style="font-size: 17px"><a href="/showProfile/<%= tweet[i].username %>"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %></a>&nbsp;&nbsp;&nbsp; <%= tweet[i].date %>
+
+										<div class="col-md-11  col-sm-11 col-xs-11">
+											<strong style="font-size: 17px"><%= tweet[i].name %></strong>&nbsp;@<%= tweet[i].username %><%= tweet[i]._id %>&nbsp;&nbsp;&nbsp;  <%=  tweet[i].date %>
 										</div>
 
 										<!-- start Pop-up For Tweet Editing -->
-										<% if (getUserProfileCard.username == tweet[i].username) {%>
+										<% if (getUserProfileCard.username ==  tweet[i].username) {%>
 										<div class="col-md-1 col-sm-1 col-xs-1" >
-											<a class="twPc-avatarLink dropdown-toggle" onclick="modal(this)" data-toggle="dropdown" style="margin-top: 2px">
+											<a  class="twPc-avatarLink dropdown-toggle" onclick="modal(this)" data-toggle="dropdown" style="margin-top: 2px">
+
 												<input type="hidden" id="hidetweet<%= tweet[i]._id %>" value="<%=tweet[i].tweet%>"/>
 												<input type="hidden" id="hideid<%= tweet[i]._id %>" value="<%= tweet[i]._id %>"/>
 
 												<img style="height: 13px;width: 13px;padding-right: 1px" src="/images/arrowdown.png"/></a>
 												<ul class="dropdown-menu">
 												<li><a href="#myModal" data-toggle="modal">Edit Tweet</a></li>
+
 
 										</ul>
 												 <div id="myModal" class="modal fade" style="padding-top: 100px">
@@ -144,13 +177,11 @@
 									</div>
 									<!-- <a href="#myModal" class="btn btn-lg btn-primary" data-toggle="modal">Launch Demo Modal</a> -->
 								<p id="tweet<%= tweet[i]._id %>"><%= tweet[i].tweet %></p>
-									 <% for (let j = tweet[i].likes.length-1 ; j>=0 ; j-- ){ %>
-										<% if (getUserProfileCard.username == tweet[i].likes[j].liker) {
-											flag = true;
-											break;
-										 } else {
-											flag = false;
-										 } %>
+
+
+									 <%  for (let j = tweet[i].likes.length-1 ; j>=0 ; j--  ){ %>
+
+
 									<%} %>
 									<div class="row" id="likeParent" style="margin-bottom: 0px;">
 										 <% if (flag == true) { %>
@@ -164,7 +195,9 @@
 												</div>
 										 <% } else { %>
 												<div class="col-md-1 col-sm-1 col-xs-1">
-													 <input type="image" class="like" src="images/twitterLike.png"
+
+													 <input type="image" class="like"  src="images/twitterLike.png"
+
 													 onclick="like(this)" id="<%= tweet[i]._id %>" style="height: 20px;width: 20px;"
 													 name="<%=tweet[i].likes.length%>">
 												</div>
@@ -185,16 +218,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="javascript/myModal.js">
-
-</script>
-
 <script type="text/javascript" src="javascript/myModal.js"></script>
 
 <script type="text/javascript" src="javascript/editTweet.js"></script>
 <script type="text/javascript" src="javascript/createTweet.js"></script>
 <script type="text/javascript" src="javascript/like.js"> </script>
 <script type="text/javascript" src="javascript/unlike.js"></script>
+
 <script type="text/javascript">
 let $button = $("#Tweet");
 $button.prop("disabled", true);
@@ -207,6 +237,7 @@ $("#tweetArea").blur(function(){
 <script type="text/javascript">
 
 </script>
+
 
 </body>
 </html>
