@@ -13,7 +13,6 @@ let flash = require('express-flash');
 let SECRETKEY = process.env.SECRETKEY;
 let random, mailOptions, host, link;
 
-
 exports.registerGet = function (req, res) {
 	if (req.user !== undefined) {
 		res.redirect('/home');
@@ -46,7 +45,7 @@ exports.registerPost = async function (req, res) {
 		status: true
 	});
 
-	//check user is exist or not
+	// check user is exist or not
 	let checkUser = await User.getUser(
 		{
 			$or:
@@ -94,7 +93,7 @@ exports.registerPost = async function (req, res) {
 							console.log(error);
 							res.end('error');
 						} else {
-							req.flash('info', 'mail has been send to ' + mailOptions.to + ' Please verify your account');
+							req.flash('success', 'mail has been send to ' + mailOptions.to + ' Please verify your account');
 							res.render('login', {to: mailOptions.to});
 						}
 					});
@@ -113,7 +112,7 @@ exports.registerPost = async function (req, res) {
 };
 
 exports.verifyAccount = async function (req, res) {
-	let isVerified = help.verifyLink(req.query.vToken);
+	let isVerified = await help.verifyLink(req.query.vToken);
 	if (isVerified) {
 		let updateuser = await User.updateUser({username: isVerified.username},
 			{$set: {status: true}});
@@ -123,7 +122,6 @@ exports.verifyAccount = async function (req, res) {
 		res.end('<h1>Token Expired</h1>');
 	}
 };
-
 
 exports.loginGet = function (req, res) {
 	if (req.user) {
@@ -273,7 +271,6 @@ exports.logout = function (req, res) {
 	req.session.destroy();
 	res.redirect('/login');
 };
-
 
 let smtpTransport = nodemailer.createTransport({
 	service: 'Gmail',

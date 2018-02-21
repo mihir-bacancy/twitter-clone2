@@ -31,16 +31,16 @@
         <!-- Collection of nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse" style="background-color: #ffffff;">
 
-          <a href="/home"><img clas="center-block" style="align-self: center;" src="/twitterlogo.png" class="twitterlogo"  /></a>
+          <a href="/home"><img clas="center-block" style="align-self: center;height: 50px" src="/twitterlogo.png" class="twitterlogo"  /></a>
             <form class="navbar-form navbar-left" method="post" action="/searchFriend">
               <div class="input-group">
-                    <input type="text" class="form-control search" placeholder="Search friends" name="search" id="search">
+                    <input type="text" class="form-control search" placeholder="Search friends" name="search" id="search" autocomplete="off">
                     <ul class="dropdown-menu form-control scrollable-menu" style="position: absolute;" id="searchResult">
 
                     </ul>
 
                     <span class="input-group-btn">
-                        <button type="submit" id="searchbtn" class="btn btn-default btn-post"><span class="glyphicon glyphicon-search"></span></button>
+                        <button type="submit" id="searchbtn" style="padding: 3.5px 7px;" class="btn btn-default btn-post"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
             </form>
@@ -88,9 +88,15 @@ $(document).ready(function(){
                 data: {search : query,checkbtn: checkbtn}
           })
           .done(function( msg ) {
-              for (var i=0; i<msg.length; i++) {
-                  $("#searchResult").append('<li><a href="/showFriendProfile?id='+msg[i]["username"]+'">'+msg[i]["username"]+'</a></li>');
+            console.log(msg);
+            if (msg.length === 0) {
+              $("#searchResult").append('<li>No Data Found</li>');
+            } else {
+               for (var i=0; i<msg.length; i++) {
+                  $("#searchResult").append('<li><a href="/showFriendProfile/'+msg[i]["username"]+'?id='+msg[i]["username"]+'">'+msg[i]["username"]+'</a></li>');
               }
+            }
+
         });
     })
   });

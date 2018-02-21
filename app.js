@@ -105,13 +105,16 @@ passport.use(new LocalStrategy(
   let getuser = await User.getUser({username: username});
 
   if (getuser) {
-    let ismatch = await help.comparePassword(password,getuser);
-    if (ismatch) {
-      return done(null, getuser);
+    if (getuser.status === true) {
+      let ismatch = await help.comparePassword(password,getuser);
+      if (ismatch) {
+        return done(null, getuser);
+      } else {
+        // req.flash('failed');
+        return done(null, false ,{message:'password incorrect'});
+      }
     } else {
-      // req.flash('failed');
-      console.log('password incorrect')
-      return done(null, false ,{message:'password incorrect'});
+      return done(null, false ,{message:'Please verified your account check your mail id'});
     }
   } else {
       return done(null,false,{message: 'user not found.'})

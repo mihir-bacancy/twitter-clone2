@@ -7,6 +7,7 @@ exports.searchFriendPost = async function (req, res) {
 	let Query = req.body.search;
 	let status = '';
 	let checkStatusBtn;
+	// console.log("query",Query);
 
 	let users = await User.searchUser({ name: { $regex: '.*' + Query + '.*'} });
 	// Reverse Check Follow status true or not
@@ -38,7 +39,8 @@ exports.searchFriendPost = async function (req, res) {
 			res.send(users);
 		}
 	} else {
-		res.send('no user found');
+		console.log('nop f');
+		res.send('no user');
 	}
 };
 
@@ -53,7 +55,7 @@ exports.showFriendProfile = async function (req, res) {
 	}
 
 	if (friendUsername == req.user.username) {
-		res.redirect('/showProfile');
+		res.redirect('/showProfile/' + req.user.username);
 	}
 
 	let checkFollowStatus = await Follower.checkFollow(
@@ -105,12 +107,12 @@ exports.unfollow = async function (req, res) {
 	let myUsername = req.user.username;
 	let friendUsername = req.body.friendUsername;
 
-		let unfollowFriend = await Follower.updateFollow({$and: [{username: myUsername},
-			{following: friendUsername}]}, {$set: {status: false}});
-		let followingcount = await Follower.getFollowersCount(
-			{ username: req.user.username, status: true});
+	let unfollowFriend = await Follower.updateFollow({$and: [{username: myUsername},
+		{following: friendUsername}]}, {$set: {status: false}});
+	let followingcount = await Follower.getFollowersCount(
+		{ username: req.user.username, status: true});
 
-		res.send({followingcount: followingcount});
+	res.send({followingcount: followingcount});
 };
 
 exports.follow = async function (req, res) {

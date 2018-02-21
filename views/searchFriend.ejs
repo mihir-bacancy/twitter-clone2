@@ -13,7 +13,7 @@
 
     <body>
       <% include headerAfterLogin %>
-  <h1>Welcome  to friend result<h1>
+
   <div class="dropdown">
 
 
@@ -21,7 +21,8 @@
   </div>
     <div id="results">
       <div class="row">
-      <% if ( users != undefined ) {  %>
+      <% if ( users != undefined && users.length !== 0) {  %>
+
       <% for (let i = users.length-1; i >= 0; i--) { %>
         <div class="twPc-div col-md-3">
            <a class="twPc-bg twPc-block" style="width=100%;background : url('/images/cover.jpg')"></a><div>
@@ -47,7 +48,13 @@
           </div>
 
       <% } %>
+      <% } else {%>
+      <div class="col-md-3">
+        <h1>No User Found</h1>
+      </div>
       <% } %>
+
+
 
       </div>
 

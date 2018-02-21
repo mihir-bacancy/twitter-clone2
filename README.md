@@ -19,4 +19,5 @@ Your app should now be running on [localhost:3000](http://localhost:3000/).
 
 ```
 node 8.9.4 installed and version > 8.9.4
+Mongo db version v3.2.18
 ```

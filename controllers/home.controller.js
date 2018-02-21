@@ -3,7 +3,6 @@ const Feed = require('../models/feed.models');
 const Follower = require('../models/follow.models');
 const following = require('../models/users.models');
 
-
 // Get Details like following list,follower list,follower count,following count
 // tweet count,profile card following user tweet like unlike status and sort tweet by date
 // and time
@@ -51,7 +50,7 @@ exports.homeGet = async function (req, res) {
 		followercount: followercount,
 		followingcount: followingcount,
 		getTweetCount: getTweetCount,
-		username: req.user.username,
+		username: req.user.username
 
 	});
 };
@@ -81,7 +80,6 @@ exports.showProfileGet = async function (req, res) {
 			getTweetCount: getTweetCount,
 			username: req.user.username
 		});
-
 };
 
 // Render on edit profile
@@ -89,7 +87,7 @@ exports.profileGet = async function (req, res) {
 	let checkUser = await User.getUser({
 		username: req.user.username
 	});
-	res.render('editprofile', { checkUser: checkUser,username: req.user.username});
+	res.render('editprofile', { checkUser: checkUser, username: req.user.username});
 };
 
 // submit and save edited profile
@@ -113,7 +111,7 @@ exports.profilePost = async function (req, res) {
 				username: req.user.username
 			}, name, img, pw, email);
 	}
-	res.redirect('/showProfile/'+req.user.username);
+	res.redirect('/showProfile/' + req.user.username);
 };
 
 // To put tweet time in proper format
