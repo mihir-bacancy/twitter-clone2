@@ -1,13 +1,21 @@
 const User = require('../models/users.models');
 const Follower = require('../models/follow.models');
 const Feed = require('../models/feed.models');
+//
+exports.searchFriendGet = (req,res) => {
+	if (req.user === undefined) {
+		res.redirect('/login')
+	} else {
+		req.flash('info','Add name in search box')
+		res.redirect('/home')
+	}
 
+}
 // Search User to follow
 exports.searchFriendPost = async function (req, res) {
 	let Query = req.body.search;
 	let status = '';
 	let checkStatusBtn;
-	// console.log("query",Query);
 
 	let users = await User.searchUser({ name: { $regex: '.*' + Query + '.*'} });
 	// Reverse Check Follow status true or not
@@ -46,6 +54,7 @@ exports.searchFriendPost = async function (req, res) {
 
 // Get other user's profile information like tweet, follower, following
 exports.showFriendProfile = async function (req, res) {
+
 	let friendUsername = req.query.id;
 	let status = 'follow';
 
@@ -194,7 +203,6 @@ exports.getFollowingList = async function (req, res) {
 		res.send('newFollowing');
 	} else {
 		let username = isFriend ? req.body.friendUsername : req.user.username;
-		console.log('username', username);
 		res.json({followingList: followingList, username: username});
 	}
 };

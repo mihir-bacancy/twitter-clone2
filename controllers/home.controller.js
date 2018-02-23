@@ -42,7 +42,7 @@ exports.homeGet = async function (req, res) {
 	getAllTweets.sort((a, b) => {
 		if (a.createdAt > b.createdAt) { return 1; } else if (a.createdAt < b.createdAt) { return -1; } else { return 0; }
 	});
-	req.flash('info', 'Welcome');
+	// req.flash('info', 'Welcome');
 	res.render('home', {
 		tweet: getAllTweets,
 		getUser: getUser,
@@ -57,6 +57,7 @@ exports.homeGet = async function (req, res) {
 
 // Show Your own Profile
 exports.showProfileGet = async function (req, res) {
+
 	let checkUser = await User.getUser({ username: req.user.username });
 	let followercount = await Follower.getFollowersCount(
 		{ following: req.user.username, status: true});
@@ -96,6 +97,18 @@ exports.profilePost = async function (req, res) {
 	let email = req.body.email;
 	let pw = req.body.pw;
 	let img;
+
+	 console.log("in edit");
+	 // file?Filter: function (req, file, callback) {
+    // let ext = path.extname(file.originalname);
+    // if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+    //   console.log(">>>>>>>>>");
+    //     return callback(new Error('Only images are allowed'))
+    // }
+    // callback(null, true)
+  // }
+
+	console.log(req.files);
 
 	let checkUser = await User.getUser({ email: email });
 	if (req.files.length == 0) {

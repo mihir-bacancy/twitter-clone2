@@ -51,11 +51,11 @@ module.exports.checkCipher = function (query) {
 
 module.exports.updateCipher = function (query, condition) {
 	return new Promise((resolve, reject) => {
-		cipher.update(query, condition, function (err, data) {
+		cipher.update(query, condition,{multi: true}, function (err, data) {
 			if (err) {
 				reject(err);
 			}
-			resolve(data);
+      resolve(data);
 		});
 	});
 };
