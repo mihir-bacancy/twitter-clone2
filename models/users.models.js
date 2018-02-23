@@ -92,7 +92,7 @@ module.exports.updateUser = function (query, condition) {
 	});
 };
 
-module.exports.updateProfile = function (query, name, img, pw, email) {
+module.exports.updateProfile = function (query, name, img, email) {
 	return new Promise((resolve, reject) => {
 		User.update(query, {
 			$set:
