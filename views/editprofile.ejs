@@ -10,6 +10,14 @@
 <body>
 <% include headerAfterLogin %>
 <div class="container">
+     <% if(messages.failed){ %>
+    <div class="alert alert-danger alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>Failed!</strong> <%= messages.failed %>
+
+    </div>
+  <% } %>
+
     <h1>Edit Profile</h1>
     <hr>
     <div class="row">
@@ -28,7 +36,8 @@
            <div class="form-group">
             <label class="col-lg-3 control-label">Profile Pic:</label>
             <div class="col-lg-8">
-              <input type="file" class="form-control" value="<%=checkUser.img%>" name='img' id='img'>
+              <input type="file" class="form-control" value="<%=checkUser.img%>" onchange="ValidateImage()" name='img' id='img'>
+              <p id="imgError" style="color: red"></p>
             </div>
           </div>
 
@@ -91,6 +100,21 @@ function allLetter() {
     }
   }
 
+</script>
+<script type="text/javascript">
+  function ValidateImage(){
+    // alert("s?ss");
+    var ext = document.getElementById("img").value.split('.').pop().toLowerCase();;
+    console.log(">>",ext);
+    if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+      // alert('invalid extension!');
+      document.getElementById("img").value = ''
+      document.getElementById("imgError").innerHTML="Only images are allowed";
+
+    }
+
+
+  }
 </script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

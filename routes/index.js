@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 let multer = require('multer');
 const passport = require('passport');
+const path = require('path');
 const LocalStrategy = require("passport-local").Strategy;
 
 const User = require('../models/users.models');
@@ -16,10 +17,24 @@ let storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
-  }
+  },
+
 });
 
-let upload = multer({ storage: storage });
+let upload = multer({
+  storage: storage,
+  fileFilter: function(req,file,cb){
+    let ext = path.extname(file.originalname);
+    if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+        let imgErr = new Error('Only images are allowed');
+        return cb(imgErr)
+        // res.flash('failed','Only images are allowed')
+        // res.render('editprofile');
+    }
+    cb(null, true)
+  }
+
+ });
 
 //Controllers
 const twitterController = require('../controllers/twitter.controller.js');
@@ -57,10 +72,10 @@ router.post('/profile', upload.any(), homeController.profilePost);
 
 //Show profile of logged in user
 // router.get('/showProfile', ensureAuthenticated, homeController.showProfileGet);
-router.get('/showProfile/:username', homeController.showProfileGet);
+router.get('/showProfile/:username', ensureAuthenticated, homeController.showProfileGet);
 
 //search user by name
-// router.get('/searchFriend', ensureAuthenticated, searchFriendController.searchFriendGet);
+router.get('/searchFriend', ensureAuthenticated, searchFriendController.searchFriendGet);
 router.post('/searchFriend', searchFriendController.searchFriendPost);
 
 //show other user profile
@@ -108,10 +123,13 @@ module.exports = router;
 
 //Middleware to ensure login
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated())
+  if (req.isAuthenticated()){
     return next();
-  else {
+    } else {
+    req.flash('failed','Please Login');
     res.redirect('/login');
   }
 }
+
+
 

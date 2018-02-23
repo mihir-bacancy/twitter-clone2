@@ -1,0 +1,7 @@
+http://xchangepal.bacancytechnology.com/demo/get_referral_bonus
+http://xchangepal.bacancytechnology.com/demo/cron_today_price
+
+
+
+http://18.221.149.127/xchangepal/demo/get_referral_bonus
+http://18.221.149.127/xchangepal/demo/cron_today_price

@@ -1,0 +1,59 @@
+
+==============================  Overall system architecture (to explain overall functionality of the system)  ===========
+
+
+
+The System Provides Online Facility to the Jobseeker for
+job placement and Company provide vacancy and admin
+can send mail to jobseeker and company for
+communication
+
+There are three main entity : 
+1) Admin : Admin can manage jobs,companies details,job Seekers,Promotions,pages,skils.
+2) Employeer : Employeer can post job,manage job posted by them.generates reports.
+3) Job Seekers : upload resume and profiles.can view job and apply.
+ 
+
+===========================  = =================learning phase=====================================================================
+Node js
+express js
+JWT
+mongoDB
+ROR
+========================================================================
+
+Module Hirarchi (DFD)
+usecase : employer
+
+
+===========================  = ============  Tools & Technology   ==========================================================================
+
+Tools : sublime,atom
+Technology : ROR,NODEJS,MongoDB,pgAdmin
+OS: Ubuntu 14.04 / 8 GB / i3 / 64 bit
+
+
+===================================Module==============================================================
+Post Job
+manage jobs
+manage job seeker
+reports
+
+
+============================================================future enhancement=======================================================
+
+
+We think that not a single project is ever considered as
+complete forever because our mind is always thinking
+something new and our necessities also are growing day
+by day. We always want something more than what we
+have. Our application also, if you see at the first glance
+than you find it to be complete but we want to make it
+still mature and fully automatic. We will add some future
+scope as bellow.
+=>In future we will allow the multiple mail system
+=>In future we are providing the mail response by
+jobseeker and company to the admin.
+
+
+
