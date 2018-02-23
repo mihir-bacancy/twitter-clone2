@@ -65,7 +65,7 @@
 			<div class="well clearfix row" style="background-color: #e8f4fb">
 				<div class="col-md-1 col-sm-1 col-xs-1"><img src="<%= getUserProfileCard.img %>" class="img-circle" alt="Cinque Terre" width="32" height="32"></div>
 				<div class="col-md-11"><textarea class="form-control" rows="4" name="tweetArea" id="tweetArea" placeholder="What's Happening?" style="border-color: #a3d4f2;border-radius: 17px;" ></textarea><br/>
-				<button class="btn btn-primary pull-right" id="Tweet" style="border-radius: 50px;background-color: #48aae6" name="Tweet"><b>Tweet</b></button></div>
+				<button class="btn btn-primary pull-right" hidden="hidden" id="Tweet" style="border-radius: 50px;background-color: #48aae6" name="Tweet"><b>Tweet</b></button></div>
 
 
 			</div>
@@ -196,13 +196,25 @@
 <script type="text/javascript" src="javascript/createTweet.js"></script>
 <script type="text/javascript" src="javascript/like.js"> </script>
 <script type="text/javascript" src="javascript/unlike.js"></script>
-<script type="text/javascript">
-let $button = $("#Tweet");
-$button.prop("disabled", true);
 
-$("#tweetArea").blur(function(){
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#Tweet").hide();
+	})
+</script>
+
+<script type="text/javascript">
+
+
+$("#tweetArea").keyup(function(){
 	console.log(">>");
-  $button.prop("disabled", (this.value === "")? true : false);
+	let text = document.getElementById("tweetArea").value;
+	console.log(text);
+	if (text !== "") {
+		$("#Tweet").show();
+	} else {
+		$("#Tweet").hide();
+	}
 });
 
 </script>

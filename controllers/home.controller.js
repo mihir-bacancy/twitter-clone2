@@ -95,34 +95,21 @@ exports.profileGet = async function (req, res) {
 exports.profilePost = async function (req, res) {
 	let name = req.body.name;
 	let email = req.body.email;
-	let pw = req.body.pw;
 	let img;
 
-	 console.log("in edit");
-	 // file?Filter: function (req, file, callback) {
-    // let ext = path.extname(file.originalname);
-    // if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-    //   console.log(">>>>>>>>>");
-    //     return callback(new Error('Only images are allowed'))
-    // }
-    // callback(null, true)
-  // }
-
-	console.log(req.files);
-
-	let checkUser = await User.getUser({ email: email });
+	let checkUser = await User.getUser({ email: req.user.email });
 	if (req.files.length == 0) {
 		img = checkUser.img;
 		let updatePro = await User.updateProfile(
 			{
 				username: req.user.username
-			}, name, img, pw, email);
+			}, name, img, email);
 	} else {
 		img = req.files[0].path.replace('public', '');
 		let updatePro = await User.updateProfile(
 			{
 				username: req.user.username
-			}, name, img, pw, email);
+			}, name, img, email);
 	}
 	res.redirect('/showProfile/' + req.user.username);
 };
