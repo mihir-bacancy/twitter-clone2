@@ -28,7 +28,7 @@
 
 
 
-        <form class="form-horizontal" role="form" method="post" action="/profile" enctype="multipart/form-data" id='infoForm'>
+        <form class="form-horizontal" role="form" method="post" onsubmit="return allvalidate()" action="/profile" enctype="multipart/form-data" id='infoForm'>
 
           <h3>Personal info</h3>
 
@@ -93,7 +93,6 @@ function allLetter() {
       document.getElementById("nameerr").innerHTML="";
       return true;
     } else {
-
       document.getElementById("nameerr").innerHTML="Username must have alphabet characters only";
       // formName.focus();
       return false;
@@ -114,6 +113,15 @@ function allLetter() {
     }
 
 
+  }
+</script>
+<script type="text/javascript">
+  function allvalidate() {
+    if (ValidateEmail() && allLetter()) {
+      return true
+    } else {
+      return false
+    }
   }
 </script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

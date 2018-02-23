@@ -2,15 +2,14 @@ const User = require('../models/users.models');
 const Follower = require('../models/follow.models');
 const Feed = require('../models/feed.models');
 //
-exports.searchFriendGet = (req,res) => {
+exports.searchFriendGet = (req, res) => {
 	if (req.user === undefined) {
-		res.redirect('/login')
+		res.redirect('/login');
 	} else {
-		req.flash('info','Add name in search box')
-		res.redirect('/home')
+		req.flash('info', 'Add name in search box');
+		res.redirect('/home');
 	}
-
-}
+};
 // Search User to follow
 exports.searchFriendPost = async function (req, res) {
 	let Query = req.body.search;
@@ -47,14 +46,12 @@ exports.searchFriendPost = async function (req, res) {
 			res.send(users);
 		}
 	} else {
-		console.log('nop f');
 		res.send('no user');
 	}
 };
 
 // Get other user's profile information like tweet, follower, following
 exports.showFriendProfile = async function (req, res) {
-
 	let friendUsername = req.query.id;
 	let status = 'follow';
 

@@ -16,19 +16,19 @@
 						<div>
 							<div class="twPc-button" >
 
-								<a href="" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= getUserProfileCard.username %></a>
+								<a href="/showProfile/<%= getUserProfileCard.username %>" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">@<%= getUserProfileCard.username %></a>
 							</div>
-								<a title="Mert Salih Kaplan" href="/showProfile"
+								<a title="Mert Salih Kaplan" href="/showProfile/<%= getUserProfileCard.username %>"
 										class="twPc-avatarLink">
 									<img alt="Mert Salih Kaplan" src="<%= getUserProfileCard.img %>" class="twPc-avatarImg">
 								</a>
 
 								<div class="twPc-divUser">
 									<div class="twPc-divName">
-											<a href="/showProfile"><%= getUserProfileCard.name %></a>
+											<a href="/showProfile/<%= getUserProfileCard.username %>"><%= getUserProfileCard.name %></a>
 									</div>
 									<span>
-									<a href="https://twitter.com/mertskaplan">@<span><%= getUserProfileCard.username %></span></a>
+									<a href="/showProfile/<%= getUserProfileCard.username %>">@<span><%= getUserProfileCard.username %></span></a>
 									</span>
 						</div>
 
@@ -104,8 +104,7 @@
 												<img style="height: 13px;width: 13px;padding-right: 1px" src="/images/arrowdown.png"/></a>
 												<ul class="dropdown-menu">
 												<li><a href="#myModal" data-toggle="modal">Edit Tweet</a></li>
-												<li class="divider"></li>
-												<li><a href=""><%= tweet[i]._id %></a></li>
+
 										</ul>
 												 <div id="myModal" class="modal fade" style="padding-top: 100px">
 														<div class="modal-dialog">

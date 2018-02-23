@@ -57,7 +57,6 @@ exports.homeGet = async function (req, res) {
 
 // Show Your own Profile
 exports.showProfileGet = async function (req, res) {
-
 	let checkUser = await User.getUser({ username: req.user.username });
 	let followercount = await Follower.getFollowersCount(
 		{ following: req.user.username, status: true});

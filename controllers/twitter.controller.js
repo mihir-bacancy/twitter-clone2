@@ -270,7 +270,7 @@ exports.logout = function (req, res) {
 let smtpTransport = nodemailer.createTransport({
 	service: 'Gmail',
 	auth: {
-		user: 'mihir.kanzariya@bacancytechnology.com',
-		pass: 'Mihirkanzariya1!'
+		user: 'enter email id',
+		pass: 'Enter pw'
 	}
 });
